@@ -9,7 +9,7 @@ export const aboutContent = {
 
   bio: [
     'I am a United States Air Force Major with extensive leadership and operational experience across complex, high-stakes environments. My career has been defined by a commitment to mission excellence, organizational effectiveness, and the disciplined application of strategic thinking to real-world challenges.',
-    'I am currently pursuing a Master of Science in Management with a concentration in Strategic Management at the University of Maryland Global Campus. This program has deepened my ability to apply rigorous analytical frameworks — including PESTEL analysis, Porter\'s Five Forces, SWOT analysis, and value chain evaluation — to assess organizational environments, evaluate strategic alternatives, and develop evidence-based recommendations.',
+    'I am currently pursuing a Master of Science in Management with a concentration in Project Management at the University of Maryland Global Campus, with an expected graduation date of Spring 2026. This program has deepened my ability to apply rigorous analytical frameworks — including PESTEL analysis, Porter\'s Five Forces, SWOT analysis, and value chain evaluation — to assess organizational environments, evaluate strategic alternatives, and develop evidence-based recommendations.',
     'My professional background integrates leadership, operations management, and decision-making under uncertainty. I bring a systems-thinking orientation to every challenge, recognizing that effective strategy requires understanding the interconnections between organizational capabilities, competitive dynamics, stakeholder expectations, and global market forces.',
     'Beyond traditional strategic management, I maintain a strong interest in leveraging technology and digital tools to support analysis, decision-making, and professional communication. This ePortfolio itself reflects that orientation — built as a custom web application to organize and present strategic analysis in a professional digital format.',
   ],
@@ -44,9 +44,9 @@ export const aboutContent = {
 
   education: [
     {
-      degree: 'Master of Science in Management — Strategic Management',
+      degree: 'Master of Science in Management — Project Management',
       institution: 'University of Maryland Global Campus',
-      status: 'In Progress — Expected 2026',
+      status: 'In Progress — Expected Spring 2026',
     },
   ],
 };
