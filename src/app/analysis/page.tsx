@@ -148,6 +148,109 @@ export default function AnalysisPage() {
           </div>
         </div>
       </div>
+
+      {/* Project Manager Tools Section */}
+      <div className="bg-navy-900 text-white">
+        <div className="container-wide py-16 md:py-20">
+          <div className="text-center mb-10">
+            <p className="text-sm font-medium text-accent-400 uppercase tracking-widest mb-3">
+              Tools &amp; Methodology
+            </p>
+            <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight mb-4">
+              Project Manager Tools
+            </h2>
+            <p className="max-w-2xl mx-auto text-navy-300 leading-relaxed">
+              The strategic analyses and deliverables in this portfolio were built using custom-developed tools
+              available at{' '}
+              <a
+                href="https://projectmanagerhelper.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-accent-400 hover:text-accent-300 underline underline-offset-2 transition-colors"
+              >
+                projectmanagerhelper.com
+              </a>
+              . These tools are designed to streamline strategic analysis workflows for project managers and
+              business strategists.
+            </p>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2 max-w-4xl mx-auto">
+            {/* CPA Tool */}
+            <div className="rounded-xl border border-navy-700 bg-navy-800/60 p-6 hover:border-accent-500/50 transition-colors">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent-500/15 text-accent-400">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-semibold text-white">Competitive Position Analysis (CPA)</h3>
+              </div>
+              <p className="text-sm text-navy-300 leading-relaxed mb-4">
+                Used to generate the comprehensive strategic opportunity report featuring weighted competitive scoring,
+                value curve analysis, strategic group mapping, PESTEL radar charts, Porter&apos;s Five Forces assessment,
+                SWOT analysis, and benchmarking comparisons — all in a single interactive HTML deliverable.
+              </p>
+              <a
+                href="https://projectmanagerhelper.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-sm font-medium text-accent-400 hover:text-accent-300 transition-colors"
+              >
+                Try the CPA Tool
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                </svg>
+              </a>
+            </div>
+
+            {/* Risk Register Tool */}
+            <div className="rounded-xl border border-navy-700 bg-navy-800/60 p-6 hover:border-accent-500/50 transition-colors">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent-500/15 text-accent-400">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-semibold text-white">Risk Register &amp; Mitigation</h3>
+              </div>
+              <p className="text-sm text-navy-300 leading-relaxed mb-4">
+                Used to build the risk register, conduct probability and impact assessments, and develop
+                structured mitigation strategies for the strategic pivot implementation and overall
+                implementation risk reports included in this portfolio.
+              </p>
+              <a
+                href="https://projectmanagerhelper.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-sm font-medium text-accent-400 hover:text-accent-300 transition-colors"
+              >
+                Try the Risk Register Tool
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <div className="mt-10 text-center">
+            <a
+              href="https://projectmanagerhelper.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-accent-500 hover:bg-accent-600 text-white text-sm font-semibold rounded-lg transition-colors shadow-lg shadow-accent-500/20"
+            >
+              Explore All Project Manager Tools
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+              </svg>
+            </a>
+            <p className="mt-4 text-xs text-navy-400">
+              Free tools for project managers and business strategists — built by Laznier Mederos Santos
+            </p>
+          </div>
+        </div>
+      </div>
     </>
   );
 }

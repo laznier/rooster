@@ -306,6 +306,8 @@ export const analysisSections: AnalysisSection[] = [
       'Rothaermel, F. T. (2024). Strategic management (6th ed.). McGraw-Hill.',
       'BloombergNEF. (2025). Electric vehicle outlook 2025. Bloomberg Finance L.P.',
       'Hitt, M. A., Ireland, R. D., & Hoskisson, R. E. (2023). Strategic management: Competitiveness and globalization (14th ed.). Cengage Learning.',
+      'Project Manager Helper. (2026). Competitive Position Analysis (CPA) tool [Web application]. https://projectmanagerhelper.com',
+      'Project Manager Helper. (2026). Risk Register & Mitigation tool [Web application]. https://projectmanagerhelper.com',
     ],
   },
 ];
