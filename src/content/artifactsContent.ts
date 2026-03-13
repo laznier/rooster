@@ -73,11 +73,11 @@ export const artifactsContent = {
       id: 'unit4-environmental-analysis',
       title: 'Environmental Analysis — Tesla, Inc.',
       description:
-        'External environmental assessment applying PESTEL analysis and Porter\'s Five Forces to evaluate the competitive landscape and macro-environmental factors affecting Tesla\'s strategic position across U.S., European, and Chinese markets.',
+        'External environmental assessment applying PESTEL analysis and Porter\'s Five Forces to evaluate the competitive landscape and macro-environmental factors affecting Tesla\'s strategic position across U.S., European, and Chinese markets. Includes annotated slide deck with speaker notes.',
       unit: 'Unit 4',
       skillDemonstrated: 'External environmental assessment using multiple strategic frameworks',
-      link: undefined,
-      linkLabel: 'View Analysis',
+      link: '/assets/slides/Mederos_Tesla_Unit4_Final_SlideDeck_WithNotes.pptx',
+      linkLabel: 'Download Slide Deck',
     },
   ] as Artifact[],
 };
