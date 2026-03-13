@@ -1,4 +1,6 @@
 {
+  "buildCommand": "next build",
+  "outputDirectory": "out",
   "cleanUrls": false,
   "headers": [
     {
