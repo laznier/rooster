@@ -1,9 +1,33 @@
+/* eslint-disable @next/next/no-img-element */
+
 interface ChartPlaceholderProps {
   label: string;
   description?: string;
+  imageSrc?: string;
 }
 
-export function ChartPlaceholder({ label, description }: ChartPlaceholderProps) {
+export function ChartPlaceholder({ label, description, imageSrc }: ChartPlaceholderProps) {
+  if (imageSrc) {
+    return (
+      <figure className="my-6">
+        <div className="rounded-xl border border-navy-200 overflow-hidden bg-white shadow-sm">
+          <img
+            src={imageSrc}
+            alt={label}
+            className="w-full h-auto"
+            loading="lazy"
+          />
+        </div>
+        <figcaption className="mt-3 text-center">
+          <p className="text-sm font-semibold text-navy-700">{label}</p>
+          {description && (
+            <p className="mt-1 text-xs text-navy-400">{description}</p>
+          )}
+        </figcaption>
+      </figure>
+    );
+  }
+
   return (
     <div className="my-8 rounded-xl border-2 border-dashed border-navy-200 bg-navy-50/50 p-8 text-center">
       <div className="flex justify-center mb-3">
@@ -15,11 +39,6 @@ export function ChartPlaceholder({ label, description }: ChartPlaceholderProps) 
       {description && (
         <p className="mt-1 text-xs text-navy-400">{description}</p>
       )}
-      <p className="mt-3 text-xs text-navy-300">
-        Replace this placeholder with your chart or visual.
-        <br />
-        Add images to <code className="bg-navy-100 px-1 py-0.5 rounded text-navy-500">public/images/</code> and reference them here.
-      </p>
     </div>
   );
 }

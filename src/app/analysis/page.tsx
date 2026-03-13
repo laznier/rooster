@@ -69,20 +69,52 @@ export default function AnalysisPage() {
                 {/* Download placeholder */}
                 <div className="mt-8 pt-6 border-t border-navy-100">
                   <p className="text-xs font-semibold text-navy-400 uppercase tracking-widest mb-3">
-                    Resources
+                    Supporting Resources
                   </p>
-                  <button
-                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-navy-50 text-navy-600 text-sm font-medium rounded-lg border border-navy-200 hover:bg-navy-100 transition-colors cursor-default"
-                    title="Upload your PDF to public/ and link it here"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                    Download PDF
-                  </button>
-                  <p className="text-xs text-navy-400 mt-2 text-center">
-                    PDF link placeholder
-                  </p>
+                  <div className="space-y-2">
+                    <a
+                      href="/assets/html/Tesla_Inc_Strategic_Opportunity_Analysis_2026-03-13_REPORT.html"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-accent-50 text-accent-700 text-sm font-medium rounded-lg border border-accent-200 hover:bg-accent-100 transition-colors"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                      </svg>
+                      Full Interactive Report
+                    </a>
+                    <a
+                      href="/assets/slides/Tesla_Executive_Briefing_Slides_Final.pptx"
+                      className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-navy-50 text-navy-600 text-sm font-medium rounded-lg border border-navy-200 hover:bg-navy-100 transition-colors"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5" />
+                      </svg>
+                      Executive Briefing Slides
+                    </a>
+                    <a
+                      href="/assets/pdfs/Tesla%20-%20Risk%20of%20Strategic%20Pivot%20Implementation.pdf"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-navy-50 text-navy-600 text-sm font-medium rounded-lg border border-navy-200 hover:bg-navy-100 transition-colors"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      Risk of Strategic Pivot
+                    </a>
+                    <a
+                      href="/assets/pdfs/Tesla%20implementation%20risk%20report.pdf"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-navy-50 text-navy-600 text-sm font-medium rounded-lg border border-navy-200 hover:bg-navy-100 transition-colors"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      Implementation Risk Report
+                    </a>
+                  </div>
                 </div>
               </div>
             </aside>

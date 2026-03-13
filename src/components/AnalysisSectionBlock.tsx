@@ -33,14 +33,15 @@ export function AnalysisSectionBlock({ section }: { section: AnalysisSection }) 
         </div>
       ))}
 
-      {/* Chart placeholders */}
+      {/* Charts */}
       {section.charts && section.charts.length > 0 && (
-        <div className="mt-6 grid gap-4 md:grid-cols-2">
+        <div className="mt-6 grid gap-6 md:grid-cols-2">
           {section.charts.map((chart, i) => (
             <ChartPlaceholder
               key={i}
               label={chart.label}
               description={chart.description}
+              imageSrc={chart.placeholder !== 'placeholder' ? chart.placeholder : undefined}
             />
           ))}
         </div>
