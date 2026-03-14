@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  ...(process.env.STATIC_EXPORT === 'true' && { output: 'export' }),
-  basePath: process.env.PAGES_BASE_PATH || '',
+  output: 'export',
+  ...(process.env.PAGES_BASE_PATH ? { basePath: process.env.PAGES_BASE_PATH } : {}),
   images: {
     unoptimized: true,
   },
