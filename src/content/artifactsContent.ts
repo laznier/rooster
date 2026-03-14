@@ -21,13 +21,13 @@ export const artifactsContent = {
   artifacts: [
     {
       id: 'competitive-position-report',
-      title: 'Competitive Position Analysis — Full Interactive Report',
+      title: 'Competitive Position Analysis — Full CPA Report',
       description:
-        'Comprehensive competitive positioning report featuring weighted scoring, value curves, strategic group mapping, benchmarking, SWOT, PESTEL, and Porter\'s Five Forces analyses across Tesla and key competitors. Includes interactive charts and detailed comparative data.',
+        'Comprehensive competitive positioning report generated using the CPA tool at projectmanagerhelper.com. Features weighted scoring, value curves, strategic group mapping, benchmarking, SWOT, PESTEL, and Porter\'s Five Forces analyses across Tesla and key competitors with detailed comparative data.',
       unit: 'Unit 7',
       skillDemonstrated: 'Multi-framework competitive analysis and data-driven strategic assessment',
-      link: '/assets/html/Tesla_Inc_Strategic_Opportunity_Analysis_2026-03-13_REPORT.html',
-      linkLabel: 'View Interactive Report',
+      link: '/assets/pdfs/CPA_TOOL_Tesla_Inc_Strategic_Opportunity_Analysis_2026-03-13_REPORT.pdf',
+      linkLabel: 'View CPA Report (PDF)',
     },
     {
       id: 'executive-briefing',
