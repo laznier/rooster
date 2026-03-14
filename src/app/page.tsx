@@ -22,6 +22,12 @@ export default function HomePage() {
       <section className="relative bg-navy-950 text-white overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-accent-600/8 via-transparent to-transparent pointer-events-none" />
         <div className="container-wide relative py-24 md:py-32 lg:py-40">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo.png"
+            alt="Rooster"
+            className="h-16 w-16 object-contain invert mb-8"
+          />
           <p className="text-xs font-medium text-accent-400 uppercase tracking-[0.2em] mb-6">
             Early-Stage Defense Training Venture
           </p>
