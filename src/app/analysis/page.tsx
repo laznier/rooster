@@ -73,15 +73,26 @@ export default function AnalysisPage() {
                   </p>
                   <div className="space-y-2">
                     <a
-                      href="/assets/pdfs/CPA_TOOL_Tesla_Inc_Strategic_Opportunity_Analysis_2026-03-13_REPORT.pdf"
+                      href="/assets/html/Tesla_Inc_Strategic_Opportunity_Analysis_2026-03-13_REPORT.html"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-accent-50 text-accent-700 text-sm font-medium rounded-lg border border-accent-200 hover:bg-accent-100 transition-colors"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                      </svg>
+                      Full Interactive Report
+                    </a>
+                    <a
+                      href="/assets/pdfs/CPA_TOOL_Tesla_Inc_Strategic_Opportunity_Analysis_2026-03-13_REPORT.pdf"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-navy-50 text-navy-500 text-xs font-medium rounded-lg border border-navy-200 hover:bg-navy-100 transition-colors"
+                    >
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
-                      Full CPA Report (PDF)
+                      PDF Version
                     </a>
                     <a
                       href="/assets/slides/Tesla_Executive_Briefing_Slides_Final.pptx"
@@ -189,7 +200,7 @@ export default function AnalysisPage() {
               <p className="text-sm text-navy-300 leading-relaxed mb-4">
                 Used to generate the comprehensive strategic opportunity report featuring weighted competitive scoring,
                 value curve analysis, strategic group mapping, PESTEL radar charts, Porter&apos;s Five Forces assessment,
-                SWOT analysis, and benchmarking comparisons — all compiled into a comprehensive strategic report.
+                SWOT analysis, and benchmarking comparisons — all in a single interactive report.
               </p>
               <a
                 href="https://projectmanagerhelper.com"

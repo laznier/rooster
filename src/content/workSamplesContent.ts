@@ -21,13 +21,13 @@ export const workSamplesContent = {
   samples: [
     {
       id: 'competitive-position-tool',
-      title: 'Competitive Position Analysis (CPA) Report',
+      title: 'Interactive Competitive Position Analysis Tool',
       description:
-        'A comprehensive strategic report generated using the CPA tool at projectmanagerhelper.com. Performs weighted competitive scoring, value curve analysis, strategic group mapping, benchmarking, and comparative SWOT/PESTEL/Five Forces assessments across Tesla and key EV industry competitors with publication-quality visualizations and structured data summaries.',
+        'A comprehensive interactive report generated using the CPA tool at projectmanagerhelper.com. Performs weighted competitive scoring, value curve analysis, strategic group mapping, benchmarking, and comparative SWOT/PESTEL/Five Forces assessments across Tesla and key EV industry competitors. Generates publication-quality visualizations and structured data summaries.',
       category: 'Strategy & Analytics',
       relevance: 'Demonstrates the ability to leverage purpose-built strategic analysis tools for data-driven competitive assessment',
-      link: '/assets/pdfs/CPA_TOOL_Tesla_Inc_Strategic_Opportunity_Analysis_2026-03-13_REPORT.pdf',
-      linkLabel: 'View CPA Report (PDF)',
+      link: '/assets/html/Tesla_Inc_Strategic_Opportunity_Analysis_2026-03-13_REPORT.html',
+      linkLabel: 'View Interactive Report',
     },
     {
       id: 'custom-eportfolio',
