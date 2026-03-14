@@ -35,14 +35,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-        serif: ['Georgia', 'Cambria', 'Times New Roman', 'serif'],
-      },
-      typography: {
-        DEFAULT: {
-          css: {
-            maxWidth: 'none',
-          },
-        },
+        mono: ['ui-monospace', 'SFMono-Regular', 'SF Mono', 'Menlo', 'monospace'],
       },
     },
   },

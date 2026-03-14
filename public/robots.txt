@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /
+
+# This site is currently set to noindex.
+# Remove this file or update the rules when ready for public indexing.

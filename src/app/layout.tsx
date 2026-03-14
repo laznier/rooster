@@ -4,9 +4,20 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 
 export const metadata: Metadata = {
-  title: 'Laznier Mederos Santos — Strategic Management ePortfolio',
+  title: 'Rooster — Portable Voice-Driven C2 Training',
   description:
-    'Professional ePortfolio showcasing strategic management knowledge, comprehensive strategic analysis, and course artifacts. MGMT 670 Strategic Management Capstone, University of Maryland Global Campus.',
+    'Rooster is an early-stage venture building portable, voice-driven command-and-control training tools that supplement scarce enterprise simulators.',
+  robots: {
+    index: false,
+    follow: false,
+  },
+  openGraph: {
+    title: 'Rooster — Portable Voice-Driven C2 Training',
+    description:
+      'Portable, voice-driven command-and-control training that supplements scarce enterprise simulators.',
+    type: 'website',
+    siteName: 'Rooster',
+  },
 };
 
 export default function RootLayout({
@@ -16,7 +27,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="flex min-h-screen flex-col">
+      <head>
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+      </head>
+      <body className="flex min-h-screen flex-col bg-navy-950">
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

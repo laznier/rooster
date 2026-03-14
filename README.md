@@ -1,140 +1,84 @@
-# Strategic Management ePortfolio
+# Rooster
 
-**Laznier Mederos Santos**  
-MGMT 670 — Strategic Management Capstone  
-University of Maryland Global Campus  
-March 2026
+**Portable, voice-driven command-and-control training.**
 
----
+Rooster is an early-stage venture building accessible training tools that supplement scarce enterprise simulators. This repository contains the public-facing landing site.
 
-## About
+## Tech Stack
 
-This is a custom-built professional ePortfolio for the Unit 7 Comprehensive Strategic Analysis assignment. It showcases strategic management knowledge, a comprehensive Tesla strategic analysis, course artifacts, and additional work samples.
+- **Framework:** Next.js 14 (Static Export)
+- **Styling:** Tailwind CSS
+- **Language:** TypeScript
+- **Deployment:** GitHub Pages (automatic via Actions)
 
-**Tech stack:** Next.js 14 · TypeScript · Tailwind CSS · Static Export · Vercel-ready
-
----
-
-## Quick Start
-
-### Prerequisites
-
-- [Node.js](https://nodejs.org) 18+ installed
-- npm (comes with Node.js)
-
-### Run Locally
+## Local Development
 
 ```bash
-# Install dependencies
 npm install
-
-# Start development server
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:3000](http://localhost:3000).
 
-### Build for Production
+## Build
 
 ```bash
 npm run build
 ```
 
-This generates a static export in the `out/` folder, ready for deployment.
+Static output is generated in the `out/` directory.
 
----
+## Deployment
 
-## Deploy to Vercel
+### GitHub Pages (automatic)
 
-1. Push this project to a GitHub repository.
-2. Go to [vercel.com](https://vercel.com) and sign in with GitHub.
-3. Click **"New Project"** → select your repository.
-4. Vercel auto-detects Next.js. Click **Deploy**.
-5. Your site will be live at a `.vercel.app` URL.
+Push to `main` — GitHub Actions will build and deploy automatically.
 
-To use a custom domain, go to **Settings → Domains** in your Vercel project.
+The site will be available at `https://laznier.github.io/rooster`.
 
----
+### Vercel (alternative)
 
-## How to Edit Content
+1. Import the repo into Vercel
+2. Set `PAGES_BASE_PATH` to empty (or remove it from `next.config.mjs`)
+3. Deploy — Vercel handles the rest
 
-All editable content is in **`src/content/`**. Edit these files to update the site without touching components or layouts:
+## Content to Replace with Real Media
 
-| File | What It Controls |
-|------|-----------------|
-| `siteConfig.ts` | Navigation, name, footer, course info |
-| `homeContent.ts` | Home page hero, intro, preview cards |
-| `aboutContent.ts` | About Me bio, competencies, education |
-| `analysisContent.ts` | **Strategic Analysis** — all sections, subsections, chart placeholders |
-| `artifactsContent.ts` | Course artifact cards |
-| `workSamplesContent.ts` | Additional work sample cards |
-| `contactContent.ts` | Contact/LinkedIn info |
-
-### Adding Images / Charts
-
-1. Place image files in `public/images/` (e.g., `public/images/swot-chart.png`).
-2. In `analysisContent.ts`, update the chart placeholder's `placeholder` field from `'placeholder'` to `'/images/swot-chart.png'`.
-3. To display images instead of placeholders, update the `ChartPlaceholder` component in `src/components/ChartPlaceholder.tsx` or use standard `<img>` tags in your content.
-
-### Adding PDF Downloads
-
-1. Place your PDF in `public/` (e.g., `public/tesla-analysis.pdf`).
-2. Update the download link in `src/app/analysis/page.tsx` to point to `/tesla-analysis.pdf`.
-
-### Adding Artifact Links
-
-In `artifactsContent.ts`, set the `link` field on any artifact to a URL or file path.
-
----
-
-## What to Customize First
-
-Before publishing, update these items in order of priority:
-
-1. **`src/content/analysisContent.ts`** — Replace all `[PLACEHOLDER]` sections with your final Tesla strategic analysis content.
-2. **`src/content/artifactsContent.ts`** — Add links to your actual course artifact documents.
-3. **`src/content/aboutContent.ts`** — Review and refine your professional bio.
-4. **`public/images/`** — Add your SWOT, PESTEL, Five Forces, and other chart images.
-5. **`src/content/homeContent.ts`** — Fine-tune the home page intro text if needed.
-6. **`src/content/workSamplesContent.ts`** — Update or add additional work samples.
-
----
+- **Hero section:** Add a logo or hero graphic (replace the `R` monogram if desired)
+- **Prototype section:** Add a screenshot of the demo (replace the placeholder card)
+- **Social proof section:** Consider adding a screenshot of the LinkedIn post
+- **Open Graph image:** Add a `public/og-image.png` (1200×630px) for social sharing
 
 ## Project Structure
 
 ```
 src/
-├── app/                    # Next.js App Router pages
-│   ├── layout.tsx          # Root layout (header + footer)
-│   ├── page.tsx            # Home page
-│   ├── about/page.tsx      # About Me
-│   ├── analysis/page.tsx   # Strategic Analysis (centerpiece)
-│   ├── artifacts/page.tsx  # Course Artifacts
-│   ├── work-samples/page.tsx # Additional Work Samples
-│   ├── contact/page.tsx    # Professional Connection
-│   └── globals.css         # Global styles
-├── components/             # Reusable UI components
-│   ├── Header.tsx          # Sticky navigation header
-│   ├── Footer.tsx          # Site footer
-│   ├── PageHero.tsx        # Page header banner
-│   ├── SectionHeading.tsx  # Section title component
-│   ├── PreviewCard.tsx     # Home page navigation cards
-│   ├── ArtifactCard.tsx    # Course artifact display card
-│   ├── WorkSampleCard.tsx  # Work sample display card
-│   ├── AnalysisSectionBlock.tsx # Strategic analysis section renderer
-│   └── ChartPlaceholder.tsx     # Placeholder for charts/visuals
-└── content/                # ✏️ EDITABLE CONTENT FILES
-    ├── siteConfig.ts
-    ├── homeContent.ts
-    ├── aboutContent.ts
-    ├── analysisContent.ts
-    ├── artifactsContent.ts
-    ├── workSamplesContent.ts
-    └── contactContent.ts
+  app/
+    layout.tsx        — Root layout, metadata, SEO
+    page.tsx          — Single-page site with all sections
+    globals.css       — Base styles and utilities
+  components/
+    Header.tsx        — Sticky navigation header
+    Footer.tsx        — Site footer
+  content/
+    siteConfig.ts     — Links, navigation, branding
+public/
+  robots.txt          — Disallow indexing (remove when ready)
+  favicon.svg         — Site favicon
+  .nojekyll           — GitHub Pages compatibility
+.github/
+  workflows/
+    deploy.yml        — GitHub Pages deploy workflow
 ```
 
----
+## SEO / Privacy
+
+- Robots meta tag: `noindex, nofollow`
+- robots.txt: `Disallow: /`
+- No analytics or tracking
+- No email addresses exposed
+- Remove noindex restrictions when ready for public visibility
 
 ## License
 
-This project was built for academic purposes as part of MGMT 670 at UMGC.
+All rights reserved.

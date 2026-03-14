@@ -1,55 +1,45 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { siteConfig } from '@/content/siteConfig';
 
 export function Header() {
-  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-navy-100 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
+    <header className="sticky top-0 z-50 border-b border-navy-800/50 bg-navy-950/95 backdrop-blur supports-[backdrop-filter]:bg-navy-950/80">
       <div className="container-wide flex h-16 items-center justify-between">
-        {/* Logo / Name */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-navy-900 text-sm font-bold text-white transition-colors group-hover:bg-accent-600">
-            LM
+        {/* Logo */}
+        <a href="#" className="flex items-center gap-3 group">
+          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-600 text-sm font-bold text-white transition-colors group-hover:bg-accent-500">
+            R
           </span>
           <div className="hidden sm:block">
-            <p className="text-sm font-semibold text-navy-900 leading-tight">
+            <p className="text-sm font-semibold text-white leading-tight">
               {siteConfig.name}
             </p>
-            <p className="text-xs text-navy-500 leading-tight">
-              {siteConfig.title}
+            <p className="text-xs text-navy-400 leading-tight">
+              {siteConfig.tagline}
             </p>
           </div>
-        </Link>
+        </a>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-1">
-          {siteConfig.navigation.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                  isActive
-                    ? 'text-accent-700 bg-accent-50'
-                    : 'text-navy-600 hover:text-navy-900 hover:bg-navy-50'
-                }`}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
+          {siteConfig.navigation.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              className="px-3 py-2 text-sm font-medium rounded-md text-navy-300 hover:text-white hover:bg-navy-800/60 transition-colors"
+            >
+              {item.label}
+            </a>
+          ))}
         </nav>
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden flex items-center justify-center w-10 h-10 rounded-md text-navy-600 hover:bg-navy-50"
+          className="md:hidden flex items-center justify-center w-10 h-10 rounded-md text-navy-300 hover:bg-navy-800"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle navigation menu"
         >
@@ -67,24 +57,17 @@ export function Header() {
 
       {/* Mobile Navigation */}
       {mobileOpen && (
-        <nav className="md:hidden border-t border-navy-100 bg-white px-6 py-4 space-y-1">
-          {siteConfig.navigation.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setMobileOpen(false)}
-                className={`block px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                  isActive
-                    ? 'text-accent-700 bg-accent-50'
-                    : 'text-navy-600 hover:text-navy-900 hover:bg-navy-50'
-                }`}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
+        <nav className="md:hidden border-t border-navy-800/50 bg-navy-950 px-6 py-4 space-y-1">
+          {siteConfig.navigation.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              onClick={() => setMobileOpen(false)}
+              className="block px-3 py-2 text-sm font-medium rounded-md text-navy-300 hover:text-white hover:bg-navy-800/60 transition-colors"
+            >
+              {item.label}
+            </a>
+          ))}
         </nav>
       )}
     </header>

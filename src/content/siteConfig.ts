@@ -1,33 +1,25 @@
-// ─────────────────────────────────────────────
-// Site-wide configuration
-// Edit this file to update navigation, branding, and footer
-// ─────────────────────────────────────────────
-
 export const siteConfig = {
-  name: 'Laznier Mederos Santos',
-  title: 'Strategic Management ePortfolio',
-  course: 'MGMT 670 — Strategic Management Capstone',
-  university: 'University of Maryland Global Campus',
-  professor: 'Dr. R. Dool',
-  date: 'March 2026',
+  name: 'Rooster',
+  tagline: 'Portable Voice-Driven C2 Training',
 
   navigation: [
-    { label: 'Home', href: '/' },
-    { label: 'About', href: '/about' },
-    { label: 'Strategic Analysis', href: '/analysis' },
-    { label: 'Artifacts', href: '/artifacts' },
-    { label: 'Work Samples', href: '/work-samples' },
-    { label: 'Connect', href: '/contact' },
+    { label: 'The Gap', href: '#training-gap' },
+    { label: 'Solution', href: '#solution' },
+    { label: 'How It Works', href: '#how-it-works' },
+    { label: 'Prototype', href: '#prototype' },
+    { label: 'Roadmap', href: '#roadmap' },
+    { label: 'Connect', href: '#connect' },
   ],
 
-  social: {
+  links: {
     linkedin: 'https://www.linkedin.com/in/laznier-mederos-santos/',
+    linkedinPost:
+      'https://www.linkedin.com/posts/laznier-mederos-santos_theres-a-critical-training-gap-between-whiteboard-activity-7413371637955407873-EhXc?utm_source=share&utm_medium=member_desktop&rcm=ACoAACERBv4BmrrbVWuIA6AKqInmtvAPmVSuYos',
+    prototype: 'https://adafco.vercel.app',
   },
 
   footer: {
-    line1: '© 2026 Laznier Mederos Santos. All rights reserved.',
-    line2:
-      'MGMT 670 Strategic Management Capstone — University of Maryland Global Campus',
-    line3: 'This ePortfolio was custom-built as part of the Unit 7 comprehensive strategic analysis assignment.',
+    line1: '© 2026 Rooster. All rights reserved.',
+    line2: 'An early-stage venture in portable command-and-control training.',
   },
 };
