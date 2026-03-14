@@ -8,9 +8,12 @@ export function Footer() {
           {/* Branding */}
           <div>
             <div className="flex items-center gap-3 mb-3">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-600 text-xs font-bold text-white">
-                R
-              </span>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/logo.png"
+                alt="Rooster"
+                className="h-8 w-8 rounded-lg object-contain invert"
+              />
               <p className="text-sm font-semibold text-white">
                 {siteConfig.name}
               </p>

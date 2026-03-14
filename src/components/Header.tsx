@@ -11,9 +11,12 @@ export function Header() {
       <div className="container-wide flex h-16 items-center justify-between">
         {/* Logo */}
         <a href="#" className="flex items-center gap-3 group">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-600 text-sm font-bold text-white transition-colors group-hover:bg-accent-500">
-            R
-          </span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo.png"
+            alt="Rooster"
+            className="h-9 w-9 rounded-lg object-contain invert"
+          />
           <div className="hidden sm:block">
             <p className="text-sm font-semibold text-white leading-tight">
               {siteConfig.name}
