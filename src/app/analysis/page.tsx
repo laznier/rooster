@@ -163,7 +163,7 @@ export default function AnalysisPage() {
               The strategic analyses and deliverables in this portfolio were built using custom-developed tools
               available at{' '}
               <a
-                href="https://projectmanagerhelper.com"
+                href="https://www.projectmanagerhelper.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-accent-400 hover:text-accent-300 underline underline-offset-2 transition-colors"
@@ -192,7 +192,7 @@ export default function AnalysisPage() {
                 SWOT analysis, and benchmarking comparisons — all in a single interactive report.
               </p>
               <a
-                href="https://projectmanagerhelper.com"
+                href="https://www.projectmanagerhelper.com/cpa/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-sm font-medium text-accent-400 hover:text-accent-300 transition-colors"
@@ -220,7 +220,7 @@ export default function AnalysisPage() {
                 implementation risk reports included in this portfolio.
               </p>
               <a
-                href="https://projectmanagerhelper.com"
+                href="https://www.projectmanagerhelper.com/risk-register/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-sm font-medium text-accent-400 hover:text-accent-300 transition-colors"
@@ -235,7 +235,7 @@ export default function AnalysisPage() {
 
           <div className="mt-10 text-center">
             <a
-              href="https://projectmanagerhelper.com"
+              href="https://www.projectmanagerhelper.com"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-6 py-3 bg-accent-500 hover:bg-accent-600 text-white text-sm font-semibold rounded-lg transition-colors shadow-lg shadow-accent-500/20"
