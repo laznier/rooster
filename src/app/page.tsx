@@ -1,4 +1,5 @@
 import { siteConfig } from '@/content/siteConfig';
+import { MarketGap } from '@/components/MarketGap';
 
 const PIPELINE_STEPS = [
   'Voice',
@@ -32,7 +33,7 @@ export default function HomePage() {
             Early-Stage Defense Training Venture
           </p>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-[1.1] mb-6 max-w-4xl text-balance">
-            Train More. Brief Smarter.{' '}
+            Train More.{' '}
             <br className="hidden sm:block" />
             Be Ready.
           </h1>
@@ -155,6 +156,11 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ═══════════════════════════════════════════
+          MARKET GAP
+          ═══════════════════════════════════════════ */}
+      <MarketGap />
 
       {/* ═══════════════════════════════════════════
           THE SOLUTION

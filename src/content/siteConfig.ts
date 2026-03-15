@@ -4,6 +4,7 @@ export const siteConfig = {
 
   navigation: [
     { label: 'The Gap', href: '#training-gap' },
+    { label: 'Market Gap', href: '#market-gap' },
     { label: 'Solution', href: '#solution' },
     { label: 'How It Works', href: '#how-it-works' },
     { label: 'Prototype', href: '#prototype' },
