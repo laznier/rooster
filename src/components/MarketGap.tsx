@@ -214,7 +214,7 @@ export function MarketGap() {
             {/* Rooster annotation */}
             <text
               x={tierX(1)}
-              y={valY(1) - 16}
+              y={valY(4) - 6}
               textAnchor="middle"
               className="fill-[#f59e0b] text-[11px] font-bold"
             >
@@ -222,7 +222,7 @@ export function MarketGap() {
             </text>
             <text
               x={tierX(1)}
-              y={valY(1) - 4}
+              y={valY(4) + 6}
               textAnchor="middle"
               className="fill-[#f59e0b] text-[10px] font-bold"
             >
