@@ -117,28 +117,20 @@ export default function HomePage() {
             </div>
 
             <div className="overflow-hidden rounded-xl border border-navy-700/80 bg-black">
+              {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
               <video
                 className="w-full h-auto"
                 controls
+                controlsList="nodownload"
+                disablePictureInPicture
                 preload="metadata"
                 playsInline
                 poster="/images/thumbnail1.png"
+                onContextMenu={(e) => e.preventDefault()}
               >
                 <source src="/videos/ABM_mode_level4_playthrough.mp4" type="video/mp4" />
-                Your browser does not support HTML5 video. You can download the file instead.
+                Your browser does not support HTML5 video.
               </video>
-            </div>
-
-            <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-              <p className="text-sm text-navy-300 leading-relaxed">
-                File path: <span className="text-navy-100">public/videos/ABM_mode_level4_playthrough.mp4</span>
-              </p>
-              <a
-                href="/videos/ABM_mode_level4_playthrough.mp4"
-                className="inline-flex items-center rounded-lg border border-navy-600 px-4 py-2 text-sm font-semibold text-navy-200 hover:bg-navy-800 hover:text-white transition-colors"
-              >
-                Download Sample
-              </a>
             </div>
           </div>
         </div>
