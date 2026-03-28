@@ -122,6 +122,7 @@ export default function HomePage() {
                 controls
                 preload="metadata"
                 playsInline
+                poster="/images/thumbnail1.png"
               >
                 <source src="/videos/ABM_mode_level4_playthrough.mp4" type="video/mp4" />
                 Your browser does not support HTML5 video. You can download the file instead.
