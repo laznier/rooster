@@ -126,8 +126,9 @@ export default function HomePage() {
               </div>
 
               <p className="mt-4 text-sm text-navy-300 leading-relaxed">
-                Anti-Ballistic Missile mode — a full Level 4 playthrough demonstrating
-                threat detection, engagement sequencing, and voice-driven command flow.
+                Air Battle Manager mode — a full Level 4 playthrough demonstrating
+                control of ground and air defenses, threat detection, engagement
+                sequencing, and voice-driven command flow.
               </p>
             </div>
 
