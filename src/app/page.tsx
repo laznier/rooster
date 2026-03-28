@@ -84,6 +84,66 @@ export default function HomePage() {
       </section>
 
       {/* ═══════════════════════════════════════════
+          VIDEO SAMPLES
+          ═══════════════════════════════════════════ */}
+      <section id="samples" className="section-padding bg-navy-900 text-white scroll-mt-16">
+        <div className="container-wide">
+          <div className="max-w-3xl">
+            <p className="text-xs font-medium text-accent-400 uppercase tracking-[0.2em] mb-3">
+              Live Demonstration
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
+              Video Sample: ABM Mode Level 4 Playthrough
+            </h2>
+            <div className="h-0.5 w-12 bg-accent-500 rounded-full mb-6" />
+            <p className="text-base md:text-lg text-navy-200 leading-relaxed">
+              A direct look at Rooster in action. This sample shows a representative
+              command-and-control training run with realistic pacing and interaction
+              flow.
+            </p>
+          </div>
+
+          <div className="mt-10 rounded-2xl border border-navy-700/70 bg-navy-950/70 p-4 md:p-6 shadow-2xl shadow-black/20">
+            <div className="flex flex-wrap gap-2 mb-4">
+              <span className="inline-flex items-center rounded-full border border-accent-500/40 bg-accent-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent-300">
+                Featured Sample
+              </span>
+              <span className="inline-flex items-center rounded-full border border-navy-600 bg-navy-800/70 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-navy-200">
+                ABM Mode
+              </span>
+              <span className="inline-flex items-center rounded-full border border-navy-600 bg-navy-800/70 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-navy-200">
+                Level 4
+              </span>
+            </div>
+
+            <div className="overflow-hidden rounded-xl border border-navy-700/80 bg-black">
+              <video
+                className="w-full h-auto"
+                controls
+                preload="metadata"
+                playsInline
+              >
+                <source src="/videos/ABM_mode_level4_playthrough.mp4" type="video/mp4" />
+                Your browser does not support HTML5 video. You can download the file instead.
+              </video>
+            </div>
+
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+              <p className="text-sm text-navy-300 leading-relaxed">
+                File path: <span className="text-navy-100">public/videos/ABM_mode_level4_playthrough.mp4</span>
+              </p>
+              <a
+                href="/videos/ABM_mode_level4_playthrough.mp4"
+                className="inline-flex items-center rounded-lg border border-navy-600 px-4 py-2 text-sm font-semibold text-navy-200 hover:bg-navy-800 hover:text-white transition-colors"
+              >
+                Download Sample
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
           THE TRAINING GAP
           ═══════════════════════════════════════════ */}
       <section id="training-gap" className="section-padding bg-white scroll-mt-16">

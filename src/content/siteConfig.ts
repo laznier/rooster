@@ -3,6 +3,7 @@ export const siteConfig = {
   tagline: 'Portable Voice-Driven C2 Training',
 
   navigation: [
+    { label: 'Samples', href: '#samples' },
     { label: 'The Gap', href: '#training-gap' },
     { label: 'Market Gap', href: '#market-gap' },
     { label: 'Solution', href: '#solution' },
