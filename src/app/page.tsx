@@ -90,40 +90,72 @@ export default function HomePage() {
         <div className="container-wide">
           <div className="max-w-3xl">
             <p className="text-xs font-medium text-accent-400 uppercase tracking-[0.2em] mb-3">
-              Live Demonstration
+              Live Demonstrations
             </p>
             <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
-              Video Sample: ABM Mode Level 4 Playthrough
+              Video Samples
             </h2>
             <div className="h-0.5 w-12 bg-accent-500 rounded-full mb-6" />
             <p className="text-base md:text-lg text-navy-200 leading-relaxed">
-              A direct look at Rooster in action. This sample shows a representative
-              command-and-control training run with realistic pacing and interaction
-              flow.
+              A direct look at Rooster in action. These samples show representative
+              command-and-control training runs with realistic pacing and interaction
+              flow across different mission types.
             </p>
           </div>
 
-          <div className="mt-10 rounded-2xl border border-navy-700/70 bg-navy-950/70 p-4 md:p-6 shadow-2xl shadow-black/20">
-            <div className="flex flex-wrap gap-2 mb-4">
-              <span className="inline-flex items-center rounded-full border border-accent-500/40 bg-accent-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent-300">
-                Featured Sample
-              </span>
-              <span className="inline-flex items-center rounded-full border border-navy-600 bg-navy-800/70 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-navy-200">
-                ABM Mode
-              </span>
-              <span className="inline-flex items-center rounded-full border border-navy-600 bg-navy-800/70 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-navy-200">
-                Level 4
-              </span>
+          <div className="mt-10 grid gap-8 lg:grid-cols-2">
+            {/* Video 1 — ABM Mode */}
+            <div className="rounded-2xl border border-navy-700/70 bg-navy-950/70 p-4 md:p-6 shadow-2xl shadow-black/20">
+              <div className="flex flex-wrap gap-2 mb-4">
+                <span className="inline-flex items-center rounded-full border border-accent-500/40 bg-accent-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent-300">
+                  ABM Mode
+                </span>
+                <span className="inline-flex items-center rounded-full border border-navy-600 bg-navy-800/70 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-navy-200">
+                  Level 4
+                </span>
+              </div>
+
+              <div className="overflow-hidden rounded-xl border border-navy-700/80 bg-black aspect-video">
+                <iframe
+                  className="w-full h-full"
+                  src="https://www.youtube.com/embed/NKpMvW_IjVg?rel=0&modestbranding=1"
+                  title="ABM Mode Level 4 Playthrough"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+
+              <p className="mt-4 text-sm text-navy-300 leading-relaxed">
+                Anti-Ballistic Missile mode — a full Level 4 playthrough demonstrating
+                threat detection, engagement sequencing, and voice-driven command flow.
+              </p>
             </div>
 
-            <div className="overflow-hidden rounded-xl border border-navy-700/80 bg-black aspect-video">
-              <iframe
-                className="w-full h-full"
-                src="https://www.youtube.com/embed/NKpMvW_IjVg?rel=0&modestbranding=1"
-                title="ABM Mode Level 4 Playthrough"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
+            {/* Video 2 — Air-to-Air DCA */}
+            <div className="rounded-2xl border border-navy-700/70 bg-navy-950/70 p-4 md:p-6 shadow-2xl shadow-black/20">
+              <div className="flex flex-wrap gap-2 mb-4">
+                <span className="inline-flex items-center rounded-full border border-accent-500/40 bg-accent-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent-300">
+                  Air-to-Air Mode
+                </span>
+                <span className="inline-flex items-center rounded-full border border-navy-600 bg-navy-800/70 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-navy-200">
+                  Defensive Counter Air
+                </span>
+              </div>
+
+              <div className="overflow-hidden rounded-xl border border-navy-700/80 bg-black aspect-video">
+                <iframe
+                  className="w-full h-full"
+                  src="https://www.youtube.com/embed/hv-QZgH368o?rel=0&modestbranding=1"
+                  title="Air-to-Air Defensive Counter Air Mission"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+
+              <p className="mt-4 text-sm text-navy-300 leading-relaxed">
+                Air-to-air mode — a defensive counter air mission showcasing fighter
+                management, intercept coordination, and real-time voice commands.
+              </p>
             </div>
           </div>
         </div>
