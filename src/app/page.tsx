@@ -119,7 +119,7 @@ export default function HomePage() {
             <div className="overflow-hidden rounded-xl border border-navy-700/80 bg-black aspect-video">
               <iframe
                 className="w-full h-full"
-                src="https://www.youtube.com/embed/REPLACE_WITH_VIDEO_ID?rel=0&modestbranding=1"
+                src="https://www.youtube.com/embed/NKpMvW_IjVg?rel=0&modestbranding=1"
                 title="ABM Mode Level 4 Playthrough"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
