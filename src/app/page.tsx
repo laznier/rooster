@@ -115,14 +115,27 @@ export default function HomePage() {
                 </span>
               </div>
 
-              <div className="overflow-hidden rounded-xl border border-navy-700/80 bg-black aspect-video">
-                <iframe
-                  className="w-full h-full"
-                  src="https://www.youtube.com/embed/NKpMvW_IjVg?rel=0&modestbranding=1"
-                  title="ABM Mode Level 4 Playthrough"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
+              <div className="overflow-hidden rounded-xl border border-navy-700/80 bg-black aspect-video relative group">
+                <a
+                  href="https://www.youtube.com/watch?v=NKpMvW_IjVg"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block w-full h-full"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/images/thumbnail1.png"
+                    alt="ABM Mode Level 4 Playthrough"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition-colors">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-600/90 text-white group-hover:bg-red-500 transition-colors shadow-lg">
+                      <svg className="w-8 h-8 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
+                      </svg>
+                    </div>
+                  </div>
+                </a>
               </div>
 
               <p className="mt-4 text-sm text-navy-300 leading-relaxed">
@@ -143,14 +156,27 @@ export default function HomePage() {
                 </span>
               </div>
 
-              <div className="overflow-hidden rounded-xl border border-navy-700/80 bg-black aspect-video">
-                <iframe
-                  className="w-full h-full"
-                  src="https://www.youtube.com/embed/hv-QZgH368o?rel=0&modestbranding=1"
-                  title="Air-to-Air Defensive Counter Air Mission"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
+              <div className="overflow-hidden rounded-xl border border-navy-700/80 bg-black aspect-video relative group">
+                <a
+                  href="https://www.youtube.com/watch?v=hv-QZgH368o"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block w-full h-full"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/images/thumbnail3.png"
+                    alt="Air-to-Air Defensive Counter Air Mission"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition-colors">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-600/90 text-white group-hover:bg-red-500 transition-colors shadow-lg">
+                      <svg className="w-8 h-8 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
+                      </svg>
+                    </div>
+                  </div>
+                </a>
               </div>
 
               <p className="mt-4 text-sm text-navy-300 leading-relaxed">
