@@ -116,21 +116,14 @@ export default function HomePage() {
               </span>
             </div>
 
-            <div className="overflow-hidden rounded-xl border border-navy-700/80 bg-black">
-              {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-              <video
-                className="w-full h-auto"
-                controls
-                controlsList="nodownload"
-                disablePictureInPicture
-                preload="metadata"
-                playsInline
-                poster="/images/thumbnail1.png"
-                onContextMenu={(e) => e.preventDefault()}
-              >
-                <source src="https://media.githubusercontent.com/media/laznier/rooster/main/public/videos/ABM_mode_level4_playthrough.mp4" type="video/mp4" />
-                Your browser does not support HTML5 video.
-              </video>
+            <div className="overflow-hidden rounded-xl border border-navy-700/80 bg-black aspect-video">
+              <iframe
+                className="w-full h-full"
+                src="https://www.youtube.com/embed/REPLACE_WITH_VIDEO_ID?rel=0&modestbranding=1"
+                title="ABM Mode Level 4 Playthrough"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
             </div>
           </div>
         </div>
