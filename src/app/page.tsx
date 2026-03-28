@@ -128,7 +128,7 @@ export default function HomePage() {
                 poster="/images/thumbnail1.png"
                 onContextMenu={(e) => e.preventDefault()}
               >
-                <source src="/videos/ABM_mode_level4_playthrough.mp4" type="video/mp4" />
+                <source src="https://media.githubusercontent.com/media/laznier/rooster/main/public/videos/ABM_mode_level4_playthrough.mp4" type="video/mp4" />
                 Your browser does not support HTML5 video.
               </video>
             </div>
@@ -524,17 +524,19 @@ export default function HomePage() {
             rel="noopener noreferrer"
             className="block max-w-lg mx-auto border border-navy-200 rounded-xl overflow-hidden bg-navy-50 hover:shadow-md transition-shadow group mb-8"
           >
-            <div className="aspect-video bg-navy-100 flex items-center justify-center">
-              <div className="text-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-accent-600 text-white mx-auto mb-3 group-hover:bg-accent-500 transition-colors">
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
+            <div className="aspect-video bg-navy-100 relative overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/thumbnail2.png"
+                alt="Rooster prototype screenshot"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-accent-600/90 text-white group-hover:bg-accent-500 transition-colors shadow-lg">
+                  <svg className="w-8 h-8 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
                   </svg>
                 </div>
-                <p className="text-sm font-medium text-navy-600">
-                  {/* PLACEHOLDER: Replace with a screenshot of the prototype */}
-                  Launch Interactive Demo
-                </p>
               </div>
             </div>
             <div className="p-5">
