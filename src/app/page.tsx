@@ -38,12 +38,12 @@ export default function HomePage() {
             Be Ready.
           </h1>
           <p className="text-lg md:text-xl text-navy-200 font-medium max-w-2xl leading-relaxed mb-4">
-            Portable, voice-driven command-and-control training that supplements
-            scarce enterprise simulators.
+            Portable, voice-driven Command and Control (C2) training that
+            supplements scarce enterprise simulators.
           </p>
           <p className="text-base text-navy-300 max-w-3xl leading-relaxed mb-10">
-            Rooster is building accessible training tools so C2 operators can get
-            more reps before high-value simulator events. Working prototypes
+            Rooster is a suite of accessible C2 training tools so operators can
+            get more reps before high-value simulator events. Working prototypes
             demonstrate that effective skill-building doesn&apos;t require
             enterprise-scale infrastructure&nbsp;&mdash; it requires smart design,
             realistic voice interaction, and the ability to train anywhere, anytime.
@@ -98,8 +98,8 @@ export default function HomePage() {
             <div className="h-0.5 w-12 bg-accent-500 rounded-full mb-6" />
             <p className="text-base md:text-lg text-navy-200 leading-relaxed">
               A direct look at Rooster in action. These samples show representative
-              command-and-control training runs with realistic pacing and interaction
-              flow across different mission types.
+              C2 training vignettes with realistic and adjustable pacing across
+              different mission types.
             </p>
           </div>
 

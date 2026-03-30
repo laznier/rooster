@@ -22,6 +22,6 @@ export const siteConfig = {
 
   footer: {
     line1: '© 2026 Rooster. All rights reserved.',
-    line2: 'An early-stage venture in portable command-and-control training.',
+    line2: 'An early-stage venture in portable C2 training.',
   },
 };
