@@ -906,10 +906,6 @@ export default function HomePage() {
                 q: 'Who is the target user?',
                 a: 'The primary users are C2 operators in training, and the primary buyers are military schoolhouses and training squadrons responsible for producing those operators.',
               },
-              {
-                q: 'Is there a business entity or patent?',
-                a: 'Not yet. Business formation and IP strategy are on the near-term roadmap. Current focus is on validating the training concept and building relationships with potential customers and mentors.',
-              },
             ].map((item) => (
               <div key={item.q} className="rounded-xl border border-navy-100 bg-white/80 p-6 shadow-sm shadow-navy-200/40">
                 <h3 className="text-base font-semibold text-navy-900 mb-2">
