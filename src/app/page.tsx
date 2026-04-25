@@ -454,22 +454,28 @@ export default function HomePage() {
           </p>
 
           {/* Pipeline Visualization */}
-          <div className="bg-navy-950 rounded-xl p-6 md:p-8 mb-10 overflow-x-auto">
+          <div className="bg-navy-950 rounded-xl p-6 md:p-8 mb-10">
             <p className="text-xs font-medium text-accent-400 uppercase tracking-[0.2em] mb-4">
               Voice-Driven, AI-Enabled Pipeline
             </p>
-            <div className="space-y-3 min-w-[980px] text-[11px] font-semibold uppercase tracking-wide text-white">
+            <div className="space-y-3 text-[11px] font-semibold uppercase tracking-wide text-white">
               {PIPELINE_ROWS.map((row, rowIndex) => (
-                <div key={`row-${rowIndex}`} className="grid grid-cols-5 gap-0">
+                <div
+                  key={`row-${rowIndex}`}
+                  className="flex flex-col gap-2 md:flex-row md:gap-0"
+                >
                   {row.map((step, stepIndex) => (
-                    <div key={step} className="flex items-center">
-                      <div className="flex min-h-12 flex-1 items-center justify-center border border-sky-400 bg-navy-900 px-3 py-2 text-center leading-tight">
+                    <div
+                      key={step}
+                      className="flex flex-col items-stretch md:flex-1 md:flex-row md:items-center"
+                    >
+                      <div className="flex min-h-12 w-full items-center justify-center border border-sky-400 bg-navy-900 px-3 py-2 text-center leading-tight md:flex-1">
                         {step}
                       </div>
                       {stepIndex < row.length - 1 && (
-                        <div className="flex w-4 items-center justify-center text-sky-400">
+                        <div className="flex items-center justify-center py-1 text-sky-400 md:w-4 md:py-0">
                           <svg
-                            className="h-4 w-4 flex-shrink-0"
+                            className="h-4 w-4 flex-shrink-0 rotate-90 md:rotate-0"
                             fill="currentColor"
                             viewBox="0 0 16 16"
                           >
