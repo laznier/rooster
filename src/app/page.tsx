@@ -254,7 +254,7 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════
           THE TRAINING GAP
           ═══════════════════════════════════════════ */}
-      <section id="training-gap" className="section-padding bg-white scroll-mt-16">
+      <section id="training-gap" className="section-padding bg-gradient-to-b from-white via-white to-navy-50/80 border-y border-navy-100/80 scroll-mt-16">
         <div className="container-narrow">
           <p className="text-xs font-medium text-accent-600 uppercase tracking-[0.2em] mb-3">
             The Problem
@@ -308,7 +308,7 @@ export default function HomePage() {
             ].map((item) => (
               <div
                 key={item.label}
-                className="border border-navy-100 rounded-xl p-6"
+                className="border border-navy-100 rounded-xl bg-white/80 p-6 shadow-sm shadow-navy-200/40"
               >
                 <p className="text-2xl font-bold text-navy-900 mb-1">
                   {item.stat}
@@ -435,7 +435,7 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════
           HOW IT WORKS
           ═══════════════════════════════════════════ */}
-      <section id="how-it-works" className="section-padding bg-white scroll-mt-16">
+      <section id="how-it-works" className="section-padding bg-gradient-to-b from-navy-50/80 via-white to-accent-50/20 border-y border-navy-100/70 scroll-mt-16">
         <div className="container-narrow">
           <p className="text-xs font-medium text-accent-600 uppercase tracking-[0.2em] mb-3">
             Technology Approach
@@ -612,7 +612,7 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════
           PROTOTYPE / DEMO
           ═══════════════════════════════════════════ */}
-      <section id="prototype" className="section-padding bg-white scroll-mt-16">
+      <section id="prototype" className="section-padding bg-gradient-to-b from-white via-accent-50/30 to-navy-50/80 border-y border-navy-100/80 scroll-mt-16">
         <div className="container-narrow text-center">
           <p className="text-xs font-medium text-accent-600 uppercase tracking-[0.2em] mb-3">
             Lightweight Web Demo
@@ -733,7 +733,7 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════
           MARKET
           ═══════════════════════════════════════════ */}
-      <section id="market" className="section-padding bg-white scroll-mt-16">
+      <section id="market" className="section-padding bg-gradient-to-b from-navy-50/80 via-white to-white border-y border-navy-100/70 scroll-mt-16">
         <div className="container-narrow">
           <p className="text-xs font-medium text-accent-600 uppercase tracking-[0.2em] mb-3">
             Market
@@ -756,7 +756,7 @@ export default function HomePage() {
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2">
-            <div className="border border-navy-100 rounded-xl p-6">
+            <div className="border border-navy-100 rounded-xl bg-white/80 p-6 shadow-sm shadow-navy-200/40">
               <h3 className="text-sm font-semibold text-navy-900 uppercase tracking-wider mb-4">
                 Primary Market
               </h3>
@@ -771,7 +771,7 @@ export default function HomePage() {
                 </li>
               </ul>
             </div>
-            <div className="border border-navy-100 rounded-xl p-6">
+            <div className="border border-navy-100 rounded-xl bg-white/80 p-6 shadow-sm shadow-navy-200/40">
               <h3 className="text-sm font-semibold text-navy-900 uppercase tracking-wider mb-4">
                 Expansion Markets
               </h3>
@@ -878,7 +878,7 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════
           FAQ
           ═══════════════════════════════════════════ */}
-      <section className="section-padding bg-white scroll-mt-16">
+      <section className="section-padding bg-gradient-to-b from-white via-navy-50/60 to-white border-y border-navy-100/70 scroll-mt-16">
         <div className="container-narrow">
           <p className="text-xs font-medium text-accent-600 uppercase tracking-[0.2em] mb-3">
             Questions
@@ -911,7 +911,7 @@ export default function HomePage() {
                 a: 'Not yet. Business formation and IP strategy are on the near-term roadmap. Current focus is on validating the training concept and building relationships with potential customers and mentors.',
               },
             ].map((item) => (
-              <div key={item.q}>
+              <div key={item.q} className="rounded-xl border border-navy-100 bg-white/80 p-6 shadow-sm shadow-navy-200/40">
                 <h3 className="text-base font-semibold text-navy-900 mb-2">
                   {item.q}
                 </h3>
