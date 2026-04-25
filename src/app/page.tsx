@@ -1,15 +1,21 @@
 import { siteConfig } from '@/content/siteConfig';
 import { MarketGap } from '@/components/MarketGap';
 
-const PIPELINE_STEPS = [
-  'Voice',
-  'Normalization',
-  'Intent Routing',
-  'Repair Loop',
-  'Probabilistic Loop',
-  'Clarification Loop',
-  'Deterministic Fallback',
-  'Feedback / Debrief',
+const PIPELINE_ROWS = [
+  [
+    'Voice Capture',
+    'Transcription',
+    'Normalization',
+    'Intent Routing',
+    'Repair Loop',
+  ],
+  [
+    'Probabilistic Loop',
+    'Deterministic Action',
+    'Fighter / Entity Response',
+    'Game UI Update',
+    'Feedback / Debrief',
+  ],
 ];
 
 export default function HomePage() {
@@ -449,38 +455,33 @@ export default function HomePage() {
 
           {/* Pipeline Visualization */}
           <div className="bg-navy-950 rounded-xl p-6 md:p-8 mb-10 overflow-x-auto">
-            <p className="text-xs font-medium text-navy-400 uppercase tracking-wider mb-4">
-              Interaction Pipeline
+            <p className="text-xs font-medium text-accent-400 uppercase tracking-[0.2em] mb-4">
+              Voice-Driven, AI-Enabled Pipeline
             </p>
-            <div className="flex flex-wrap items-center gap-2 text-sm font-mono">
-              {PIPELINE_STEPS.map((step, i) => (
-                <span key={step} className="flex items-center gap-2">
-                  <span className="px-3 py-1.5 bg-navy-800 text-accent-300 rounded border border-navy-700 whitespace-nowrap">
-                    {step}
-                  </span>
-                  {i < PIPELINE_STEPS.length - 1 && (
-                    <svg
-                      className="w-4 h-4 text-navy-500 flex-shrink-0"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  )}
-                </span>
+            <div className="space-y-3 min-w-[980px] text-[11px] font-semibold uppercase tracking-wide text-white">
+              {PIPELINE_ROWS.map((row, rowIndex) => (
+                <div key={`row-${rowIndex}`} className="grid grid-cols-5 gap-0">
+                  {row.map((step, stepIndex) => (
+                    <div key={step} className="flex items-center">
+                      <div className="flex min-h-12 flex-1 items-center justify-center border border-sky-400 bg-navy-900 px-3 py-2 text-center leading-tight">
+                        {step}
+                      </div>
+                      {stepIndex < row.length - 1 && (
+                        <div className="flex w-4 items-center justify-center text-sky-400">
+                          <svg
+                            className="h-4 w-4 flex-shrink-0"
+                            fill="currentColor"
+                            viewBox="0 0 16 16"
+                          >
+                            <path d="M5 2l6 6-6 6V2z" />
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
               ))}
             </div>
-            <p className="mt-4 text-xs text-navy-400 leading-relaxed">
-              Voice &rarr; normalization &rarr; intent routing &rarr; repair loop
-              &rarr; probabilistic loop &rarr; clarification loop &rarr;
-              deterministic fallback &rarr; feedback / debrief
-            </p>
           </div>
 
           <p className="text-sm text-navy-500 leading-relaxed mb-10">
