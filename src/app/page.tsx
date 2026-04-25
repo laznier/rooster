@@ -50,12 +50,12 @@ export default function HomePage() {
           </p>
           <div className="flex flex-wrap gap-4">
             <a
-              href={links.prototype}
+              href={links.overviewVideo}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center px-6 py-3 bg-accent-600 text-white text-sm font-semibold rounded-lg hover:bg-accent-500 transition-colors"
             >
-              View Prototype
+              Watch Intro Video
               <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
               </svg>
@@ -103,7 +103,62 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="mt-10 grid gap-8 lg:grid-cols-2">
+          <div className="mt-10 space-y-8">
+            <div className="rounded-2xl border border-accent-500/25 bg-gradient-to-br from-accent-500/10 via-navy-950/85 to-navy-950 p-4 md:p-6 shadow-2xl shadow-black/20">
+              <div className="flex flex-wrap gap-2 mb-4">
+                <span className="inline-flex items-center rounded-full border border-accent-500/40 bg-accent-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent-300">
+                  Overview
+                </span>
+                <span className="inline-flex items-center rounded-full border border-navy-600 bg-navy-800/70 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-navy-200">
+                  Intro Video
+                </span>
+              </div>
+
+              <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
+                <div className="overflow-hidden rounded-xl border border-navy-700/80 bg-black aspect-video relative group">
+                  <a
+                    href={links.overviewVideo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-full h-full"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="https://img.youtube.com/vi/A8JCD8vycfY/hqdefault.jpg"
+                      alt="Rooster intro video overview"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition-colors">
+                      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-600/90 text-white group-hover:bg-red-500 transition-colors shadow-lg">
+                        <svg className="w-8 h-8 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
+                        </svg>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-[0.2em] text-accent-300 mb-3">
+                    First Look
+                  </p>
+                  <h3 className="text-2xl font-bold text-white tracking-tight mb-3">
+                    Start with the short overview
+                  </h3>
+                  <p className="text-sm md:text-base text-navy-200 leading-relaxed">
+                    This video is the clearest first pass at the concept. It gives
+                    viewers the main idea before jumping into the longer, full-length
+                    mission playthroughs below.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <p className="text-xs font-medium uppercase tracking-[0.2em] text-navy-300 mb-4">
+                Full-Length Video Playthroughs
+              </p>
+              <div className="grid gap-8 lg:grid-cols-2">
             {/* Video 1 — ABM Mode */}
             <div className="rounded-2xl border border-navy-700/70 bg-navy-950/70 p-4 md:p-6 shadow-2xl shadow-black/20">
               <div className="flex flex-wrap gap-2 mb-4">
@@ -183,6 +238,8 @@ export default function HomePage() {
                 Air-to-air mode — a defensive counter air mission showcasing fighter
                 management, intercept coordination, and real-time voice commands.
               </p>
+            </div>
+              </div>
             </div>
           </div>
         </div>
@@ -551,15 +608,15 @@ export default function HomePage() {
       <section id="prototype" className="section-padding bg-white scroll-mt-16">
         <div className="container-narrow text-center">
           <p className="text-xs font-medium text-accent-600 uppercase tracking-[0.2em] mb-3">
-            Working Prototype
+            Lightweight Web Demo
           </p>
           <h2 className="text-3xl md:text-4xl font-bold text-navy-900 tracking-tight mb-4">
-            Try the Demo
+            Try the Lightweight Web Demo
           </h2>
           <div className="h-0.5 w-12 bg-accent-500 rounded-full mb-8 mx-auto" />
 
           <p className="text-base md:text-lg text-navy-700 leading-relaxed max-w-2xl mx-auto mb-4">
-            The lightweight web prototype is live and playable. It demonstrates
+            The lightweight web demo is live and playable. It demonstrates
             core interaction patterns including voice-driven command input, scenario
             response, and feedback loops&nbsp;&mdash; all running in the browser.
           </p>
@@ -580,7 +637,7 @@ export default function HomePage() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/images/thumbnail2.png"
-                alt="Rooster prototype screenshot"
+                alt="Rooster lightweight web demo screenshot"
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors">
@@ -593,7 +650,7 @@ export default function HomePage() {
             </div>
             <div className="p-5">
               <p className="text-sm font-semibold text-navy-900 mb-1">
-                ADAFCO Web Prototype
+                ADAFCO Lightweight Web Demo
               </p>
               <p className="text-xs text-navy-500">
                 adafco.vercel.app &middot; Browser-based &middot; No install required
@@ -607,7 +664,7 @@ export default function HomePage() {
             rel="noopener noreferrer"
             className="inline-flex items-center px-8 py-4 bg-accent-600 text-white font-semibold rounded-lg hover:bg-accent-500 transition-colors text-base"
           >
-            Launch Web Demo
+            Launch Lightweight Web Demo
             <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
             </svg>
