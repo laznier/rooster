@@ -60,8 +60,17 @@ export function AdminClient() {
   const [newLabel, setNewLabel] = useState('');
   const [busyInvite, setBusyInvite] = useState(false);
   const [origin, setOrigin] = useState('');
+  const [copied, setCopied] = useState<string | null>(null);
   useEffect(() => {
-    if (typeof window !== 'undefined') setOrigin(window.location.origin);
+    // Prefer the public site URL (so links emailed to people point at the
+    // deployed domain, not http://localhost:3000). Falls back to the current
+    // origin if the env var isn't set.
+    const publicUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, '');
+    if (publicUrl) {
+      setOrigin(publicUrl);
+    } else if (typeof window !== 'undefined') {
+      setOrigin(window.location.origin);
+    }
   }, []);
 
   const authHeader = () => ({ Authorization: `Bearer ${token.trim()}` });
@@ -398,11 +407,23 @@ export function AdminClient() {
                         <Td>
                           {link && (
                             <button
-                              onClick={() => navigator.clipboard.writeText(link).catch(() => {})}
-                              className="text-accent-400 hover:text-accent-300"
+                              onClick={async () => {
+                                try {
+                                  await navigator.clipboard.writeText(link);
+                                  setCopied(inv.token);
+                                  setTimeout(() => {
+                                    setCopied((cur) => (cur === inv.token ? null : cur));
+                                  }, 1500);
+                                } catch { /* ignore */ }
+                              }}
+                              className={
+                                copied === inv.token
+                                  ? 'text-emerald-300'
+                                  : 'text-accent-400 hover:text-accent-300'
+                              }
                               title={link}
                             >
-                              Copy link
+                              {copied === inv.token ? '✓ Copied' : 'Copy link'}
                             </button>
                           )}
                         </Td>

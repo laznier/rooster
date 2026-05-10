@@ -72,8 +72,21 @@ export async function POST(req: Request) {
       turnCount: transcript.filter((m) => m.role === 'user').length,
     });
   } catch (err) {
-    console.error('[validation/chat]', err);
-    return NextResponse.json({ error: 'server_error' }, { status: 500 });
+    // Surface a useful error to the client so we don't have to dig into Vercel
+    // logs to debug missing keys / quota / model issues.
+    const e = err as { status?: number; message?: string; code?: string };
+    const message = e?.message || String(err);
+    console.error('[validation/chat]', { status: e?.status, code: e?.code, message });
+    if (/OPENAI_API_KEY/i.test(message)) {
+      return NextResponse.json(
+        { error: 'llm_not_configured', detail: 'OPENAI_API_KEY is not set on the server.' },
+        { status: 503 },
+      );
+    }
+    return NextResponse.json(
+      { error: 'server_error', detail: message.slice(0, 300) },
+      { status: 500 },
+    );
   }
 }
 
