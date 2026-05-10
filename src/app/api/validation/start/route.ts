@@ -40,7 +40,7 @@ export async function POST(req: Request) {
     `;
 
     if (existing.rows.length > 0) {
-      const s = existing.rows[0];
+      const s = existing.rows[0] as unknown as SessionRow;
       return NextResponse.json({
         sessionId: s.id,
         resumed: true,
@@ -71,6 +71,7 @@ function cryptoRandomId(): string {
 }
 
 interface SessionRow {
+  id: string;
   consent_confirmed: boolean;
   video_started: boolean;
   video_completed: boolean;
