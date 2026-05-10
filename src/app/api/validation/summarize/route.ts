@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { ensureSchema, sql } from '@/lib/db';
 import { SummarizeSchema } from '@/lib/validation/schema';
 import { getProvider, type ChatMessage, type InterviewContext } from '@/lib/llm';
+import { mergeAssessments } from '@/lib/validation/risk-merge';
+import type { RiskAssessmentMap } from '@/lib/validation/risks';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -19,7 +21,8 @@ export async function POST(req: Request) {
 
     const row = await sql`
       SELECT id, transcript, summary_text, summary_struct,
-             role_category, experience_level, relationship
+             role_category, experience_level, relationship,
+             risk_assessments
       FROM validation_sessions WHERE id = ${sessionId} LIMIT 1;
     `;
     if (row.rows.length === 0) {
@@ -51,10 +54,17 @@ export async function POST(req: Request) {
       ctx,
     );
 
+    // Merge: micro-survey answers (already in DB column) take precedence
+    // over LLM extraction for numeric fields, but LLM evidence quotes are
+    // preserved.
+    const priorRisk = (s.risk_assessments ?? {}) as RiskAssessmentMap;
+    const mergedRisk = mergeAssessments(priorRisk, summary_struct.risk_assessments);
+
     await sql`
       UPDATE validation_sessions SET
         summary_text        = ${summary_text},
-        summary_struct      = ${JSON.stringify(summary_struct)}::jsonb,
+        summary_struct      = ${JSON.stringify({ ...summary_struct, risk_assessments: mergedRisk })}::jsonb,
+        risk_assessments    = ${JSON.stringify(mergedRisk)}::jsonb,
         sensitive_info_flag = ${Boolean(summary_struct.sensitive_info_flag)},
         tokens_in           = tokens_in  + ${usage.prompt_tokens},
         tokens_out          = tokens_out + ${usage.completion_tokens},
@@ -62,7 +72,10 @@ export async function POST(req: Request) {
       WHERE id = ${sessionId};
     `;
 
-    return NextResponse.json({ summary_text, summary_struct });
+    return NextResponse.json({
+      summary_text,
+      summary_struct: { ...summary_struct, risk_assessments: mergedRisk },
+    });
   } catch (err) {
     console.error('[validation/summarize]', err);
     return NextResponse.json({ error: 'server_error' }, { status: 500 });

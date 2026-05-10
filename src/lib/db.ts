@@ -50,6 +50,21 @@ export function ensureSchema(): Promise<void> {
       await sql`ALTER TABLE validation_sessions ADD COLUMN IF NOT EXISTS tokens_in  INTEGER NOT NULL DEFAULT 0;`;
       await sql`ALTER TABLE validation_sessions ADD COLUMN IF NOT EXISTS tokens_out INTEGER NOT NULL DEFAULT 0;`;
       await sql`ALTER TABLE validation_sessions ADD COLUMN IF NOT EXISTS llm_calls  INTEGER NOT NULL DEFAULT 0;`;
+      await sql`ALTER TABLE validation_sessions ADD COLUMN IF NOT EXISTS risk_assessments JSONB NOT NULL DEFAULT '{}'::jsonb;`;
+
+      // Founder-edited mitigation tracker. One row per risk id (R1..R5).
+      // Local-only writes via /api/validation/mitigations (admin-gated).
+      await sql`
+        CREATE TABLE IF NOT EXISTS validation_risk_mitigations (
+          risk_id            TEXT PRIMARY KEY,
+          current_assessment TEXT NOT NULL DEFAULT '',
+          mitigation_plan    TEXT NOT NULL DEFAULT '',
+          next_experiment    TEXT NOT NULL DEFAULT '',
+          owner              TEXT NOT NULL DEFAULT '',
+          status             TEXT NOT NULL DEFAULT 'open',
+          updated_at         TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        );
+      `;
 
       // Seed invite tokens from env on first init (dev convenience)
       const seed = process.env.VALIDATION_SEED_INVITES;

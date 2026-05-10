@@ -1,3 +1,5 @@
+import type { RiskAssessmentMap } from '@/lib/validation/risks';
+
 /**
  * Provider-agnostic LLM types. Implementations live alongside in this folder.
  * Add new providers by implementing `LLMProvider` and registering in `index.ts`.
@@ -31,6 +33,8 @@ export interface ValidationSummaryStruct {
   followup_type: string;
   evidence_strength: 'low' | 'medium' | 'high' | 'unknown';
   sensitive_info_flag: boolean;
+  /** Per-risk LLM-extracted scores + supporting evidence (R1..R5). */
+  risk_assessments: RiskAssessmentMap;
 }
 
 export interface SummaryResult {

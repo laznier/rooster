@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { RiskBaseline } from './RiskBaseline';
 
 interface Session {
   id: string;
@@ -183,40 +184,54 @@ export function AdminClient() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, loadInvites, loadUsage]);
 
-  // On mount, probe whether we're in a local (no-auth) environment.
-  // The backend skips bearer auth when `process.env.VERCEL` is unset.
+  // On mount, optimistically try to load everything without a token. If the
+  // requests succeed we're in local-dev mode (middleware allowed us through
+  // and `isAdminAuthorized` returned true) and the page hydrates with data
+  // immediately — no manual refresh needed. If they come back 401 we drop
+  // back to the token form. We retry once on transient failures because the
+  // very first request after `next dev` cold-starts can race route compile.
   useEffect(() => {
     let cancelled = false;
-    (async () => {
+
+    async function attempt(): Promise<'ok' | 'unauth' | 'retry'> {
       try {
-        const res = await fetch('/api/validation/usage');
-        if (cancelled) return;
-        if (res.ok) {
-          setLocalMode(true);
-          // Auto-load everything since no token is required.
-          setLoading(true);
-          try {
-            const sres = await fetch('/api/validation/export?format=json');
-            if (sres.ok) {
-              const data = await sres.json();
-              if (!cancelled) setSessions(data.sessions || []);
-            }
-            const ires = await fetch('/api/validation/invites');
-            if (ires.ok) {
-              const data = await ires.json();
-              if (!cancelled) setInvites(data.invites || []);
-            }
-            if (!cancelled) setUsage(await res.json());
-          } finally {
-            if (!cancelled) setLoading(false);
-          }
-        } else {
-          setLocalMode(false);
+        const [sres, ires, ures] = await Promise.all([
+          fetch('/api/validation/export?format=json', { cache: 'no-store' }),
+          fetch('/api/validation/invites', { cache: 'no-store' }),
+          fetch('/api/validation/usage', { cache: 'no-store' }),
+        ]);
+        if (sres.status === 401 || ires.status === 401 || ures.status === 401) {
+          return 'unauth';
         }
+        if (!sres.ok || !ires.ok || !ures.ok) return 'retry';
+        const sdata = await sres.json();
+        const idata = await ires.json();
+        const udata = await ures.json();
+        if (cancelled) return 'ok';
+        setSessions(sdata.sessions || []);
+        setInvites(idata.invites || []);
+        setUsage(udata);
+        setLocalMode(true);
+        return 'ok';
       } catch {
-        if (!cancelled) setLocalMode(false);
+        return 'retry';
       }
+    }
+
+    (async () => {
+      setLoading(true);
+      let result = await attempt();
+      if (result === 'retry' && !cancelled) {
+        await new Promise((r) => setTimeout(r, 800));
+        result = await attempt();
+      }
+      if (cancelled) return;
+      if (result === 'unauth' || result === 'retry') {
+        setLocalMode(false);
+      }
+      setLoading(false);
     })();
+
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -330,6 +345,9 @@ export function AdminClient() {
             </div>
           </div>
         )}
+
+        {/* ─────────── Risk baseline (P×I) ─────────── */}
+        <RiskBaseline />
 
         {/* ─────────── Invites panel ─────────── */}
         {invites && (

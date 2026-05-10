@@ -14,6 +14,7 @@ import {
   SUMMARY_SYSTEM_PROMPT,
   buildContextPreface,
 } from './prompts';
+import { RISKS, type RiskAssessment, type RiskAssessmentMap, type RiskId, emptyAssessment } from '@/lib/validation/risks';
 
 const MODEL = process.env.OPENAI_MODEL || 'gpt-4o-mini';
 
@@ -105,11 +106,54 @@ export const openaiProvider: LLMProvider = {
       followup_type: String(parsed.followup_type ?? ''),
       evidence_strength: toEvidence(parsed.evidence_strength),
       sensitive_info_flag: Boolean(parsed.sensitive_info_flag),
+      risk_assessments: parseRiskAssessments(parsed.risk_assessments),
     };
 
     return { summary_text, summary_struct: struct, usage: toUsage(resp.usage) };
   },
 };
+
+function parseRiskAssessments(raw: unknown): RiskAssessmentMap {
+  const out: RiskAssessmentMap = {};
+  const obj = (raw && typeof raw === 'object') ? (raw as Record<string, unknown>) : {};
+  for (const r of RISKS) {
+    const r_in = obj[r.id];
+    if (!r_in || typeof r_in !== 'object') {
+      out[r.id] = emptyAssessment();
+      continue;
+    }
+    const x = r_in as Record<string, unknown>;
+    const a: RiskAssessment = {
+      relevant: Boolean(x.relevant),
+      p_failure_1_7: toIntOrNull(x.p_failure_1_7, 1, 7),
+      impact_1_7: toIntOrNull(x.impact_1_7, 1, 7),
+      confidence_1_5: toIntOrNull(x.confidence_1_5, 1, 5),
+      pert_min: toNumOrNull(x.pert_min),
+      pert_likely: toNumOrNull(x.pert_likely),
+      pert_max: toNumOrNull(x.pert_max),
+      evidence_quotes: toStrArr(x.evidence_quotes),
+      disconfirming_quotes: toStrArr(x.disconfirming_quotes),
+      source: 'llm',
+    };
+    out[r.id as RiskId] = a;
+  }
+  return out;
+}
+
+function toNumOrNull(v: unknown): number | null {
+  if (v === null || v === undefined || v === '') return null;
+  const n = typeof v === 'number' ? v : Number(v);
+  return Number.isFinite(n) ? n : null;
+}
+
+function toStrArr(v: unknown): string[] {
+  if (!Array.isArray(v)) return [];
+  return v
+    .map((x) => (typeof x === 'string' ? x.trim() : ''))
+    .filter(Boolean)
+    .slice(0, 5)
+    .map((s) => (s.length > 240 ? s.slice(0, 237) + '…' : s));
+}
 
 function toUsage(u: { prompt_tokens?: number; completion_tokens?: number; total_tokens?: number } | undefined): TokenUsage {
   return {

@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { RISKS, relevantRisksForRole, type RiskId } from '@/lib/validation/risks';
 
 // ============================================================================
 // YouTube IFrame API — minimal typings + loader
@@ -45,7 +46,7 @@ function loadYouTubeApi(): Promise<void> {
 // ============================================================================
 // Types
 // ============================================================================
-type Stage = 'gate' | 'consent' | 'video' | 'intake' | 'chat' | 'summary' | 'done';
+type Stage = 'gate' | 'consent' | 'video' | 'intake' | 'chat' | 'riskMicro' | 'summary' | 'done';
 
 interface Intake {
   roleCategory: string;
@@ -76,6 +77,30 @@ interface SummaryStruct {
   followup_type: string;
   evidence_strength: string;
   sensitive_info_flag: boolean;
+}
+
+interface RiskAnswer {
+  relevant: boolean;
+  p_failure_1_7: number | null;
+  impact_1_7: number | null;
+  confidence_1_5: number | null;
+  pert_min: number | null;
+  pert_likely: number | null;
+  pert_max: number | null;
+}
+
+type RiskAnswers = Partial<Record<RiskId, RiskAnswer>>;
+
+function blankAnswer(): RiskAnswer {
+  return {
+    relevant: true,
+    p_failure_1_7: null,
+    impact_1_7: null,
+    confidence_1_5: null,
+    pert_min: null,
+    pert_likely: null,
+    pert_max: null,
+  };
 }
 
 const ROLE_CATEGORIES = [
@@ -135,6 +160,13 @@ export function ValidationFlow({ initialInvite }: { initialInvite: string }) {
   const [summaryStruct, setSummaryStruct] = useState<SummaryStruct | null>(null);
   const [edits, setEdits] = useState('');
 
+  // Per-risk micro-survey answers (R1…R5)
+  const [riskAnswers, setRiskAnswers] = useState<RiskAnswers>({});
+  const relevantRiskIds = useMemo<RiskId[]>(
+    () => relevantRisksForRole(intake.roleCategory),
+    [intake.roleCategory],
+  );
+
   // ─────────────────────────────────────────────────────────────────────────
   // Stage: start session when consent stage entered with valid invite
   // ─────────────────────────────────────────────────────────────────────────
@@ -158,7 +190,32 @@ export function ValidationFlow({ initialInvite }: { initialInvite: string }) {
         return;
       }
       setSessionId(data.sessionId);
-      setStage('consent');
+
+      // Resume from server-side state (so a refresh / new tab on the same
+      // invite picks up exactly where the respondent left off).
+      const st = data.state;
+      if (st) {
+        if (typeof st.consent === 'boolean') setConsent(st.consent);
+        if (typeof st.videoStarted === 'boolean') setVideoStarted(st.videoStarted);
+        if (typeof st.videoCompleted === 'boolean') setVideoCompleted(st.videoCompleted);
+        if (typeof st.videoPct === 'number') setVideoPct(st.videoPct);
+        if (st.intake) setIntake({
+          roleCategory: st.intake.roleCategory ?? '',
+          experienceLevel: st.intake.experienceLevel ?? '',
+          relationship: st.intake.relationship ?? '',
+          name: st.intake.name ?? '',
+          email: st.intake.email ?? '',
+          followupConsent: !!st.intake.followupConsent,
+        });
+        if (Array.isArray(st.transcript) && st.transcript.length > 0) {
+          setMessages(st.transcript as ChatMsg[]);
+          setOpener(st.transcript.find((m: ChatMsg) => m.role === 'assistant')?.content ?? '');
+        }
+        if (st.summaryText) setSummaryText(st.summaryText);
+        if (st.summaryStruct) setSummaryStruct(st.summaryStruct as SummaryStruct);
+      }
+
+      setStage(decideResumeStage(st, data.resumed));
     } catch {
       setError('Network error — please try again.');
     } finally {
@@ -173,6 +230,25 @@ export function ValidationFlow({ initialInvite }: { initialInvite: string }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // If we resumed straight into the chat stage but the transcript was empty
+  // (intake done previously, no messages sent), fetch the standardized
+  // opener so the respondent sees the same first prompt.
+  useEffect(() => {
+    if (stage !== 'chat' || messages.length > 0) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const op = await fetch('/api/validation/chat?opener=1').then((r) => r.json());
+        if (cancelled) return;
+        const opening = op?.opener || 'Thanks for taking the time. To start: what is your role?';
+        setOpener(opening);
+        setMessages([{ role: 'assistant', content: opening }]);
+      } catch { /* ignore */ }
+    })();
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stage]);
 
   // ─────────────────────────────────────────────────────────────────────────
   // Stage: video — YouTube IFrame API
@@ -343,6 +419,42 @@ export function ValidationFlow({ initialInvite }: { initialInvite: string }) {
     }
   }, [sessionId, edits]);
 
+  // Submit micro-survey answers, then trigger summarize.
+  const submitRiskSurvey = useCallback(async () => {
+    if (!sessionId) return;
+    setBusy(true);
+    setError(null);
+    try {
+      // Drop empty answers; require at least one numeric score before submit.
+      const answers: RiskAnswers = {};
+      for (const id of Object.keys(riskAnswers) as RiskId[]) {
+        const a = riskAnswers[id];
+        if (!a) continue;
+        if (!a.relevant) {
+          answers[id] = { ...a, p_failure_1_7: null, impact_1_7: null, confidence_1_5: null,
+                          pert_min: null, pert_likely: null, pert_max: null };
+        } else {
+          answers[id] = a;
+        }
+      }
+      const res = await fetch('/api/validation/risk-survey', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId, answers }),
+      });
+      if (!res.ok) {
+        setError('Could not save risk survey. You can still continue.');
+      }
+      // Always proceed to summarize even if the save partially failed; the
+      // chat transcript and any prior progress are still recorded.
+      await summarize();
+    } catch {
+      setError('Network error — please try again.');
+    } finally {
+      setBusy(false);
+    }
+  }, [sessionId, riskAnswers, summarize]);
+
   const userTurns = useMemo(() => messages.filter((m) => m.role === 'user').length, [messages]);
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -432,7 +544,18 @@ export function ValidationFlow({ initialInvite }: { initialInvite: string }) {
             </label>
             <div className="mt-6 flex justify-end">
               <PrimaryButton
-                onClick={() => setStage('video')}
+                onClick={async () => {
+                  // Persist consent immediately so a bail-out before the
+                  // intake form still leaves a record we can resume from.
+                  if (sessionId) {
+                    fetch('/api/validation/progress', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ sessionId, consent: true }),
+                    }).catch(() => { /* best-effort */ });
+                  }
+                  setStage('video');
+                }}
                 disabled={!consent || !sessionId || busy}
               >
                 {!sessionId ? 'Verifying invite…' : 'Continue to video'}
@@ -635,13 +758,121 @@ export function ValidationFlow({ initialInvite }: { initialInvite: string }) {
               <div className="rounded-lg border border-accent-500/40 bg-accent-500/10 px-4 py-4 text-sm text-accent-100">
                 <p className="font-semibold mb-2">The interviewer has enough to summarize.</p>
                 <p className="text-xs text-navy-200 mb-4">
-                  Generate a neutral summary you can review and confirm.
+                  One short calibration step before we wrap: a few numeric scores on
+                  the venture’s 5 highest-risk assumptions you’re qualified to evaluate.
                 </p>
-                <PrimaryButton onClick={summarize} disabled={busy}>
-                  {busy ? 'Generating…' : 'Generate summary'}
+                <PrimaryButton onClick={() => {
+                  // Seed default answers (relevant=true) for the risks tied to this role.
+                  setRiskAnswers((prev) => {
+                    const next: RiskAnswers = { ...prev };
+                    for (const id of relevantRiskIds) {
+                      if (!next[id]) next[id] = blankAnswer();
+                    }
+                    return next;
+                  });
+                  setStage('riskMicro');
+                }} disabled={busy}>
+                  Continue to risk calibration
                 </PrimaryButton>
               </div>
             )}
+          </Card>
+        )}
+
+        {stage === 'riskMicro' && (
+          <Card>
+            <h2 className="text-xl font-semibold mb-2">Quick risk calibration</h2>
+            <p className="text-sm text-navy-300 leading-relaxed mb-5">
+              Below are the venture&rsquo;s 5 highest-risk assumptions. We&rsquo;ve pre-selected
+              the ones your role is best positioned to evaluate — uncheck any you can&rsquo;t
+              credibly score, or add others. For each, give a 1–7 probability of failure
+              and impact-if-failure, plus an optional three-point estimate. This drives
+              the founders&rsquo; risk dashboard.
+            </p>
+
+            <div className="space-y-5">
+              {RISKS.map((r) => {
+                const id = r.id as RiskId;
+                const a = riskAnswers[id] ?? blankAnswer();
+                const setA = (patch: Partial<RiskAnswer>) =>
+                  setRiskAnswers((prev) => ({ ...prev, [id]: { ...(prev[id] ?? blankAnswer()), ...patch } }));
+                const isRecommended = relevantRiskIds.includes(id);
+                return (
+                  <div
+                    key={id}
+                    className={
+                      'rounded-xl border p-4 ' +
+                      (a.relevant
+                        ? 'border-navy-700 bg-navy-900/60'
+                        : 'border-navy-800 bg-navy-950/40 opacity-70')
+                    }
+                  >
+                    <label className="flex items-start gap-3 cursor-pointer mb-3">
+                      <input
+                        type="checkbox"
+                        checked={a.relevant}
+                        onChange={(e) => setA({ relevant: e.target.checked })}
+                        className="mt-1 h-4 w-4 accent-accent-500"
+                      />
+                      <span className="flex-1">
+                        <span className="block font-semibold text-white">
+                          {r.id}. {r.title}{' '}
+                          {isRecommended && (
+                            <span className="ml-2 inline-block rounded bg-accent-500/20 px-1.5 py-0.5 text-[10px] uppercase tracking-wider text-accent-300">
+                              your role
+                            </span>
+                          )}
+                        </span>
+                        <span className="mt-1 block text-xs text-navy-300 leading-relaxed">
+                          {r.description}
+                        </span>
+                      </span>
+                    </label>
+
+                    {a.relevant && (
+                      <div className="grid gap-4 md:grid-cols-3 pl-7">
+                        <LikertField
+                          label="Probability this assumption fails (1 = very unlikely, 7 = almost certain)"
+                          max={7}
+                          value={a.p_failure_1_7}
+                          onChange={(v) => setA({ p_failure_1_7: v })}
+                        />
+                        <LikertField
+                          label="Impact if it fails (1 = nuisance, 7 = venture-killing)"
+                          max={7}
+                          value={a.impact_1_7}
+                          onChange={(v) => setA({ impact_1_7: v })}
+                        />
+                        <LikertField
+                          label="Your confidence in these scores (1 = guess, 5 = high)"
+                          max={5}
+                          value={a.confidence_1_5}
+                          onChange={(v) => setA({ confidence_1_5: v })}
+                        />
+
+                        <div className="md:col-span-3">
+                          <p className="text-[11px] uppercase tracking-wider text-navy-400 mb-2">
+                            Optional three-point estimate — {r.pertMetric.label} ({r.pertMetric.unit})
+                          </p>
+                          <p className="text-[11px] text-navy-500 mb-2">{r.pertMetric.hint}</p>
+                          <div className="grid grid-cols-3 gap-2">
+                            <NumField label="min"    value={a.pert_min}    onChange={(v) => setA({ pert_min: v })} />
+                            <NumField label="likely" value={a.pert_likely} onChange={(v) => setA({ pert_likely: v })} />
+                            <NumField label="max"    value={a.pert_max}    onChange={(v) => setA({ pert_max: v })} />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="mt-7 flex justify-end">
+              <PrimaryButton onClick={submitRiskSurvey} disabled={busy}>
+                {busy ? 'Submitting…' : 'Submit & generate summary'}
+              </PrimaryButton>
+            </div>
           </Card>
         )}
 
@@ -777,7 +1008,7 @@ function SecondaryButton({
 }
 
 function ProgressBar({ stage }: { stage: Stage }) {
-  const order: Stage[] = ['gate', 'consent', 'video', 'intake', 'chat', 'summary', 'done'];
+  const order: Stage[] = ['gate', 'consent', 'video', 'intake', 'chat', 'riskMicro', 'summary', 'done'];
   const idx = order.indexOf(stage);
   const pct = ((idx + 1) / order.length) * 100;
   return (
@@ -799,7 +1030,75 @@ function labelFor(s: Stage): string {
     case 'video': return 'Watch video';
     case 'intake': return 'Intake';
     case 'chat': return 'Interview';
+    case 'riskMicro': return 'Risk calibration';
     case 'summary': return 'Review summary';
     case 'done': return 'Done';
   }
+}
+
+function LikertField({
+  label, max, value, onChange,
+}: { label: string; max: number; value: number | null; onChange: (v: number | null) => void }) {
+  return (
+    <div>
+      <p className="text-[11px] uppercase tracking-wider text-navy-400 mb-2">{label}</p>
+      <div className="flex flex-wrap gap-1">
+        {Array.from({ length: max }, (_, i) => i + 1).map((n) => (
+          <button
+            key={n}
+            type="button"
+            onClick={() => onChange(value === n ? null : n)}
+            className={
+              'h-8 w-8 rounded-md border text-xs font-semibold transition-colors ' +
+              (value === n
+                ? 'border-accent-500 bg-accent-500 text-white'
+                : 'border-navy-700 bg-navy-900 text-navy-200 hover:border-navy-500')
+            }
+          >
+            {n}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function NumField({
+  label, value, onChange,
+}: { label: string; value: number | null; onChange: (v: number | null) => void }) {
+  return (
+    <label className="block">
+      <span className="block text-[11px] uppercase tracking-wider text-navy-400 mb-1">{label}</span>
+      <input
+        type="number"
+        inputMode="decimal"
+        value={value ?? ''}
+        onChange={(e) => {
+          const v = e.target.value;
+          if (v === '') onChange(null);
+          else {
+            const n = Number(v);
+            onChange(Number.isFinite(n) ? n : null);
+          }
+        }}
+        className="w-full rounded-lg border border-navy-700 bg-navy-900 px-3 py-2 text-sm text-white focus:border-accent-500 focus:outline-none"
+      />
+    </label>
+  );
+}
+
+// Pick the right stage to drop the respondent into based on what's already
+// been saved server-side. Used when /api/validation/start returns an existing
+// in-progress session.
+function decideResumeStage(state: any, _resumed: boolean): Stage {
+  if (!state) return 'consent';
+  if (state.summaryText && !state.summaryConfirmed) return 'summary';
+  const transcript: ChatMsg[] = Array.isArray(state.transcript) ? state.transcript : [];
+  const hadUserTurn = transcript.some((m) => m.role === 'user');
+  if (hadUserTurn) return 'chat';
+  const i = state.intake || {};
+  if (i.roleCategory && i.experienceLevel) return 'chat';
+  if (state.consent && state.videoCompleted) return 'intake';
+  if (state.consent) return 'video';
+  return 'consent';
 }

@@ -1,4 +1,5 @@
 import type { InterviewContext } from './types';
+import { RISKS } from '@/lib/validation/risks';
 
 /**
  * The interviewer must behave like a neutral, sharp customer-discovery
@@ -60,6 +61,18 @@ INFLUENCER / END-USER / OUTSIDER and adapt:
 - OUTSIDER (academic, investor, contractor): probe their reference class
   (other tools they've evaluated), what would make them recommend it.
 
+==== THE FIVE RISK ASSUMPTIONS YOU ARE TESTING ====
+The venture's five highest-risk assumptions (use these to focus your
+probes — do not read them aloud, do not enumerate them to the respondent):
+${RISKS.map((r) => `  ${r.id}. ${r.title} — ${r.description}`).join('\n')}
+
+Bias your questioning toward the risks the respondent is actually
+qualified to evaluate (instructor → R1/R3/R4; buyer/PM → R2/R5;
+contractor → R3/R5; investor → R2/R5). When they touch a risk,
+extract a concrete signal: a number, a comparison, a named blocker,
+or a verbatim example. Those signals are the deliverable of this
+interview.
+
 ==== TOPICS TO COVER (adapt order; do not march through robotically) ====
 1. Role/background and relationship to C2 training, simulation, readiness,
    defense training, or defense technology.
@@ -72,10 +85,11 @@ INFLUENCER / END-USER / OUTSIDER and adapt:
 6. Least convincing or most risky aspect.
 7. Adoption blockers (budget, approval, integration, cultural).
 8. Deployment / security concerns (air-gap, classification, data
-   sovereignty, adversary use).
+   sovereignty, adversary use). [risk R3]
 9. Trust concerns around AI-driven scoring or debrief (hallucination,
-   wrong tactics, evaluator trust).
-10. Who would need to approve, sponsor, or influence adoption (buyer signals).
+   wrong tactics, evaluator trust). [risk R4]
+10. Who would need to approve, sponsor, or influence adoption (buyer
+    signals). [risks R2, R5]
 11. Pilot or demo interest on a 1–7 scale.
 12. Willingness for a follow-up: demo review, SME review, feedback call,
     pilot-design discussion, introduction, or not interested.
@@ -119,6 +133,31 @@ for the "Rooster C2" AI-Enabled Simulator venture, produce:
 
 2. A structured JSON object matching the schema provided.
 
+The JSON also includes a "risk_assessments" object keyed by R1..R5
+representing the venture's five highest-risk assumptions:
+${RISKS.map((r) => `  ${r.id}. ${r.title} — ${r.description}`).join('\n')}
+
+For each risk:
+- relevant: true if the respondent gave any meaningful signal on this risk;
+  false otherwise.
+- p_failure_1_7: integer 1..7 (1 = very unlikely the assumption fails,
+  7 = almost certain it fails). Estimate ONLY from what the respondent
+  actually said. null if no signal.
+- impact_1_7: integer 1..7 (1 = nuisance impact on the venture, 7 = would
+  kill the venture). null if no signal.
+- confidence_1_5: how confident you are in your extraction (NOT the
+  respondent's confidence). 1 = guessing, 5 = direct quantitative
+  statement. null if relevant=false.
+- pert_min / pert_likely / pert_max: numeric three-point estimate for the
+  risk's quantitative metric, IF the respondent gave one. Otherwise null.
+  Metrics:
+${RISKS.map((r) => `    ${r.id}: ${r.pertMetric.label} (${r.pertMetric.unit})`).join('\n')}
+- evidence_quotes: 1–3 verbatim respondent quotes (≤200 chars each) that
+  justify your scores for this risk. Empty array if none.
+- disconfirming_quotes: 0–2 quotes from the respondent that would argue
+  AGAINST your scoring (caveats, counter-evidence). Empty array if none.
+- source: always "llm".
+
 Rules:
 - If a field was not addressed, use an empty string for text fields,
   null for numeric/boolean fields, or "unknown" for evidence_strength.
@@ -134,6 +173,28 @@ Rules:
 
 Return ONLY valid JSON matching the schema. No prose outside JSON.
 `.trim();
+
+const RISK_SCHEMA = {
+  type: 'object',
+  additionalProperties: false,
+  required: [
+    'relevant', 'p_failure_1_7', 'impact_1_7', 'confidence_1_5',
+    'pert_min', 'pert_likely', 'pert_max',
+    'evidence_quotes', 'disconfirming_quotes', 'source',
+  ],
+  properties: {
+    relevant: { type: 'boolean' },
+    p_failure_1_7: { type: ['integer', 'null'], minimum: 1, maximum: 7 },
+    impact_1_7: { type: ['integer', 'null'], minimum: 1, maximum: 7 },
+    confidence_1_5: { type: ['integer', 'null'], minimum: 1, maximum: 5 },
+    pert_min: { type: ['number', 'null'] },
+    pert_likely: { type: ['number', 'null'] },
+    pert_max: { type: ['number', 'null'] },
+    evidence_quotes: { type: 'array', items: { type: 'string' } },
+    disconfirming_quotes: { type: 'array', items: { type: 'string' } },
+    source: { type: 'string', enum: ['llm', 'survey', 'both', 'none'] },
+  },
+} as const;
 
 export const SUMMARY_JSON_SCHEMA = {
   type: 'object',
@@ -154,6 +215,7 @@ export const SUMMARY_JSON_SCHEMA = {
     'followup_type',
     'evidence_strength',
     'sensitive_info_flag',
+    'risk_assessments',
   ],
   properties: {
     summary_text: { type: 'string' },
@@ -171,6 +233,14 @@ export const SUMMARY_JSON_SCHEMA = {
     followup_type: { type: 'string' },
     evidence_strength: { type: 'string', enum: ['low', 'medium', 'high', 'unknown'] },
     sensitive_info_flag: { type: 'boolean' },
+    risk_assessments: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['R1', 'R2', 'R3', 'R4', 'R5'],
+      properties: {
+        R1: RISK_SCHEMA, R2: RISK_SCHEMA, R3: RISK_SCHEMA, R4: RISK_SCHEMA, R5: RISK_SCHEMA,
+      },
+    },
   },
 } as const;
 

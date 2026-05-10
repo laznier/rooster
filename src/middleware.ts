@@ -16,6 +16,8 @@ const LOCAL_ONLY_PREFIXES = [
   '/api/validation/invites',
   '/api/validation/export',
   '/api/validation/usage',
+  '/api/validation/risk-rollup',
+  '/api/validation/mitigations',
 ];
 
 export function middleware(req: NextRequest) {
@@ -36,6 +38,8 @@ export const config = {
     '/api/validation/invites/:path*',
     '/api/validation/export/:path*',
     '/api/validation/usage/:path*',
+    '/api/validation/risk-rollup/:path*',
+    '/api/validation/mitigations/:path*',
   ],
 };
 
