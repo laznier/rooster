@@ -906,6 +906,14 @@ export default function HomePage() {
                 q: 'Who is the target user?',
                 a: 'The primary users are C2 operators in training, and the primary buyers are military schoolhouses and training squadrons responsible for producing those operators.',
               },
+              {
+                q: 'Is there a business entity?',
+                a: 'Yes. Rooster C2 LLC has been formally established.',
+              },
+              {
+                q: 'Is there a patent?',
+                a: 'IP strategy is currently under review. The present focus is on unclassified validation, customer discovery, and pilot-readiness.',
+              },
             ].map((item) => (
               <div key={item.q} className="rounded-xl border border-navy-100 bg-white/80 p-6 shadow-sm shadow-navy-200/40">
                 <h3 className="text-base font-semibold text-navy-900 mb-2">
