@@ -51,7 +51,7 @@ export function mergeAssessments(
 
 function hasNumeric(a: RiskAssessment | undefined): boolean {
   if (!a) return false;
-  return a.p_failure_1_7 != null || a.impact_1_7 != null || a.pert_likely != null;
+  return a.p_failure_0_10 != null || a.impact_0_10 != null || a.pert_likely != null;
 }
 
 function uniq(arr: string[]): string[] {

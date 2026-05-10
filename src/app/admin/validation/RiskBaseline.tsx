@@ -154,16 +154,16 @@ function PIMatrix({
   const innerW = W - PAD_L - PAD_R;
   const innerH = H - PAD_T - PAD_B;
 
-  const x = (p: number) => PAD_L + ((p - 1) / 6) * innerW;
-  const y = (i: number) => PAD_T + (1 - (i - 1) / 6) * innerH;
+  const x = (p: number) => PAD_L + (p / 10) * innerW;
+  const y = (i: number) => PAD_T + (1 - i / 10) * innerH;
 
   const maxW = Math.max(0.0001, ...rollups.map((r) => r.weight_total));
   const radius = (w: number) => 6 + 22 * Math.sqrt(Math.max(0, w) / maxW);
 
-  // Heatmap cells (1..7 × 1..7) coloured by p*i exposure.
+  // Heatmap cells (0..10 × 0..10) coloured by p*i exposure.
   const cells: { p: number; i: number; expo: number }[] = [];
-  for (let p = 1; p <= 7; p++) for (let i = 1; i <= 7; i++) cells.push({ p, i, expo: (p * i) / 49 });
-  const cellW = innerW / 7, cellH = innerH / 7;
+  for (let p = 0; p <= 10; p++) for (let i = 0; i <= 10; i++) cells.push({ p, i, expo: (p * i) / 100 });
+  const cellW = innerW / 11, cellH = innerH / 11;
   const heatColor = (e: number) => {
     // Green → amber → red gradient.
     if (e < 0.33) return 'rgba(16,185,129,0.10)';
@@ -192,18 +192,18 @@ function PIMatrix({
         <line x1={PAD_L} y1={PAD_T}     x2={PAD_L}     y2={H - PAD_B} stroke="#475569" />
 
         {/* axis labels */}
-        {[1, 2, 3, 4, 5, 6, 7].map((n) => (
+        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
           <g key={`xt${n}`}>
             <text x={x(n)} y={H - PAD_B + 16} textAnchor="middle" fontSize="10" fill="#94a3b8">{n}</text>
           </g>
         ))}
-        {[1, 2, 3, 4, 5, 6, 7].map((n) => (
+        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
           <g key={`yt${n}`}>
             <text x={PAD_L - 8} y={y(n) + 3} textAnchor="end" fontSize="10" fill="#94a3b8">{n}</text>
           </g>
         ))}
         <text x={PAD_L + innerW / 2} y={H - 6} textAnchor="middle" fontSize="11" fill="#cbd5e1">
-          Probability of failure (1 = very unlikely → 7 = almost certain)
+          Probability of failure (0 = no chance → 10 = certain)
         </text>
         <text
           x={-(PAD_T + innerH / 2)}
@@ -213,7 +213,7 @@ function PIMatrix({
           fill="#cbd5e1"
           transform="rotate(-90)"
         >
-          Impact if it fails (1 = nuisance → 7 = venture-killing)
+          Impact if it fails (0 = no impact → 10 = venture-killing)
         </text>
 
         {/* bubbles */}
@@ -222,8 +222,8 @@ function PIMatrix({
             // Placeholder ghost in lower-left when no data.
             return (
               <g key={r.risk_id} opacity="0.35">
-                <circle cx={x(1.2)} cy={y(1.2)} r={10} fill="#334155" stroke="#64748b" strokeDasharray="3 3" />
-                <text x={x(1.2)} y={y(1.2) + 3} textAnchor="middle" fontSize="9" fill="#cbd5e1">
+                <circle cx={x(0.3)} cy={y(0.3)} r={10} fill="#334155" stroke="#64748b" strokeDasharray="3 3" />
+                <text x={x(0.3)} y={y(0.3) + 3} textAnchor="middle" fontSize="9" fill="#cbd5e1">
                   {r.risk_id}
                 </text>
               </g>

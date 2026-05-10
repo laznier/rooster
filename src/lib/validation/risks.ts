@@ -131,10 +131,10 @@ export function relevantRisksForRole(roleCategory: string | null | undefined): R
 export interface RiskAssessment {
   /** True when this risk was relevant to this respondent (asked + answered). */
   relevant: boolean;
-  /** 1 = very unlikely to fail, 7 = almost certain to fail. */
-  p_failure_1_7: number | null;
-  /** 1 = nuisance impact, 7 = venture-killing. */
-  impact_1_7: number | null;
+  /** 0 = no chance of failure, 10 = certain to fail. */
+  p_failure_0_10: number | null;
+  /** 0 = no impact, 10 = venture-killing. */
+  impact_0_10: number | null;
   /** Self-rated confidence in the above scores. 1 = low, 5 = high. */
   confidence_1_5: number | null;
   /** Three-point estimate for the risk-specific quantitative metric. */
@@ -152,8 +152,8 @@ export interface RiskAssessment {
 export function emptyAssessment(): RiskAssessment {
   return {
     relevant: false,
-    p_failure_1_7: null,
-    impact_1_7: null,
+    p_failure_0_10: null,
+    impact_0_10: null,
     confidence_1_5: null,
     pert_min: null,
     pert_likely: null,

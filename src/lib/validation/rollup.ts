@@ -17,9 +17,9 @@ export interface RiskRollup {
   n: number;
   /** Sum of effective weights (role × confidence). */
   weight_total: number;
-  /** Weighted mean P (1..7) or null if n == 0. */
+  /** Weighted mean P (0..10) or null if n == 0. */
   p_mean: number | null;
-  /** Weighted mean I (1..7) or null if n == 0. */
+  /** Weighted mean I (0..10) or null if n == 0. */
   i_mean: number | null;
   /** Weighted standard deviation of P. */
   p_std: number | null;
@@ -69,8 +69,8 @@ function buildOne(
     const cw = a.confidence_1_5 != null ? a.confidence_1_5 / 5 : 0.6;
     const w = rw * cw;
     if (w <= 0) continue;
-    if (a.p_failure_1_7 != null) ps.push({ value: a.p_failure_1_7, weight: w });
-    if (a.impact_1_7 != null)    is.push({ value: a.impact_1_7,    weight: w });
+    if (a.p_failure_0_10 != null) ps.push({ value: a.p_failure_0_10, weight: w });
+    if (a.impact_0_10 != null)    is.push({ value: a.impact_0_10,    weight: w });
     for (const q of a.evidence_quotes || []) {
       evidence.push({ quote: q, session_id: s.id, w });
     }
@@ -92,7 +92,7 @@ function buildOne(
   const i_mean = weightedMean(is);
   const p_std  = weightedStd(ps, p_mean);
   const i_std  = weightedStd(is, i_mean);
-  const exposure = (p_mean != null && i_mean != null) ? (p_mean * i_mean) / 49 : null;
+  const exposure = (p_mean != null && i_mean != null) ? (p_mean * i_mean) / 100 : null;
 
   const pert = pertSamples.length > 0 ? {
     mean: pertSamples.reduce((a, b) => a + b, 0) / pertSamples.length,

@@ -9,8 +9,8 @@ export const dynamic = 'force-dynamic';
 
 const RiskAnswer = z.object({
   relevant: z.boolean(),
-  p_failure_1_7: z.number().int().min(1).max(7).nullable().optional(),
-  impact_1_7: z.number().int().min(1).max(7).nullable().optional(),
+  p_failure_0_10: z.number().int().min(0).max(10).nullable().optional(),
+  impact_0_10: z.number().int().min(0).max(10).nullable().optional(),
   confidence_1_5: z.number().int().min(1).max(5).nullable().optional(),
   pert_min: z.number().nullable().optional(),
   pert_likely: z.number().nullable().optional(),
@@ -56,8 +56,8 @@ export async function POST(req: Request) {
       surveyMap[id] = {
         ...emptyAssessment(),
         relevant: a.relevant,
-        p_failure_1_7: a.p_failure_1_7 ?? null,
-        impact_1_7: a.impact_1_7 ?? null,
+        p_failure_0_10: a.p_failure_0_10 ?? null,
+        impact_0_10: a.impact_0_10 ?? null,
         confidence_1_5: a.confidence_1_5 ?? null,
         pert_min: a.pert_min ?? null,
         pert_likely: a.pert_likely ?? null,

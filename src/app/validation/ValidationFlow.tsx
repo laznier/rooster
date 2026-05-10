@@ -81,8 +81,8 @@ interface SummaryStruct {
 
 interface RiskAnswer {
   relevant: boolean;
-  p_failure_1_7: number | null;
-  impact_1_7: number | null;
+  p_failure_0_10: number | null;
+  impact_0_10: number | null;
   confidence_1_5: number | null;
   pert_min: number | null;
   pert_likely: number | null;
@@ -94,8 +94,8 @@ type RiskAnswers = Partial<Record<RiskId, RiskAnswer>>;
 function blankAnswer(): RiskAnswer {
   return {
     relevant: true,
-    p_failure_1_7: null,
-    impact_1_7: null,
+    p_failure_0_10: null,
+    impact_0_10: null,
     confidence_1_5: null,
     pert_min: null,
     pert_likely: null,
@@ -431,7 +431,7 @@ export function ValidationFlow({ initialInvite }: { initialInvite: string }) {
         const a = riskAnswers[id];
         if (!a) continue;
         if (!a.relevant) {
-          answers[id] = { ...a, p_failure_1_7: null, impact_1_7: null, confidence_1_5: null,
+          answers[id] = { ...a, p_failure_0_10: null, impact_0_10: null, confidence_1_5: null,
                           pert_min: null, pert_likely: null, pert_max: null };
         } else {
           answers[id] = a;
@@ -832,16 +832,18 @@ export function ValidationFlow({ initialInvite }: { initialInvite: string }) {
                     {a.relevant && (
                       <div className="grid gap-4 md:grid-cols-3 pl-7">
                         <LikertField
-                          label="Probability this assumption fails (1 = very unlikely, 7 = almost certain)"
-                          max={7}
-                          value={a.p_failure_1_7}
-                          onChange={(v) => setA({ p_failure_1_7: v })}
+                          label="Probability this assumption fails (0 = no chance, 10 = certain)"
+                          min={0}
+                          max={10}
+                          value={a.p_failure_0_10}
+                          onChange={(v) => setA({ p_failure_0_10: v })}
                         />
                         <LikertField
-                          label="Impact if it fails (1 = nuisance, 7 = venture-killing)"
-                          max={7}
-                          value={a.impact_1_7}
-                          onChange={(v) => setA({ impact_1_7: v })}
+                          label="Impact if it fails (0 = no impact, 10 = venture-killing)"
+                          min={0}
+                          max={10}
+                          value={a.impact_0_10}
+                          onChange={(v) => setA({ impact_0_10: v })}
                         />
                         <LikertField
                           label="Your confidence in these scores (1 = guess, 5 = high)"
@@ -1037,13 +1039,14 @@ function labelFor(s: Stage): string {
 }
 
 function LikertField({
-  label, max, value, onChange,
-}: { label: string; max: number; value: number | null; onChange: (v: number | null) => void }) {
+  label, max, value, onChange, min = 1,
+}: { label: string; max: number; value: number | null; onChange: (v: number | null) => void; min?: number }) {
+  const count = max - min + 1;
   return (
     <div>
       <p className="text-[11px] uppercase tracking-wider text-navy-400 mb-2">{label}</p>
       <div className="flex flex-wrap gap-1">
-        {Array.from({ length: max }, (_, i) => i + 1).map((n) => (
+        {Array.from({ length: count }, (_, i) => i + min).map((n) => (
           <button
             key={n}
             type="button"

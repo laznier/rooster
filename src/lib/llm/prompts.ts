@@ -140,10 +140,10 @@ ${RISKS.map((r) => `  ${r.id}. ${r.title} — ${r.description}`).join('\n')}
 For each risk:
 - relevant: true if the respondent gave any meaningful signal on this risk;
   false otherwise.
-- p_failure_1_7: integer 1..7 (1 = very unlikely the assumption fails,
-  7 = almost certain it fails). Estimate ONLY from what the respondent
+- p_failure_0_10: integer 0..10 (0 = no chance the assumption fails,
+  10 = certain it fails). Estimate ONLY from what the respondent
   actually said. null if no signal.
-- impact_1_7: integer 1..7 (1 = nuisance impact on the venture, 7 = would
+- impact_0_10: integer 0..10 (0 = no impact on the venture, 10 = would
   kill the venture). null if no signal.
 - confidence_1_5: how confident you are in your extraction (NOT the
   respondent's confidence). 1 = guessing, 5 = direct quantitative
@@ -178,14 +178,14 @@ const RISK_SCHEMA = {
   type: 'object',
   additionalProperties: false,
   required: [
-    'relevant', 'p_failure_1_7', 'impact_1_7', 'confidence_1_5',
+    'relevant', 'p_failure_0_10', 'impact_0_10', 'confidence_1_5',
     'pert_min', 'pert_likely', 'pert_max',
     'evidence_quotes', 'disconfirming_quotes', 'source',
   ],
   properties: {
     relevant: { type: 'boolean' },
-    p_failure_1_7: { type: ['integer', 'null'], minimum: 1, maximum: 7 },
-    impact_1_7: { type: ['integer', 'null'], minimum: 1, maximum: 7 },
+    p_failure_0_10: { type: ['integer', 'null'], minimum: 0, maximum: 10 },
+    impact_0_10: { type: ['integer', 'null'], minimum: 0, maximum: 10 },
     confidence_1_5: { type: ['integer', 'null'], minimum: 1, maximum: 5 },
     pert_min: { type: ['number', 'null'] },
     pert_likely: { type: ['number', 'null'] },

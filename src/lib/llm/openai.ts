@@ -125,8 +125,8 @@ function parseRiskAssessments(raw: unknown): RiskAssessmentMap {
     const x = r_in as Record<string, unknown>;
     const a: RiskAssessment = {
       relevant: Boolean(x.relevant),
-      p_failure_1_7: toIntOrNull(x.p_failure_1_7, 1, 7),
-      impact_1_7: toIntOrNull(x.impact_1_7, 1, 7),
+      p_failure_0_10: toIntOrNull(x.p_failure_0_10, 0, 10),
+      impact_0_10: toIntOrNull(x.impact_0_10, 0, 10),
       confidence_1_5: toIntOrNull(x.confidence_1_5, 1, 5),
       pert_min: toNumOrNull(x.pert_min),
       pert_likely: toNumOrNull(x.pert_likely),
