@@ -10,7 +10,7 @@ export function Header() {
     <header className="sticky top-0 z-50 border-b border-navy-800/50 bg-navy-950/95 backdrop-blur supports-[backdrop-filter]:bg-navy-950/80">
       <div className="container-wide flex h-16 items-center justify-between">
         {/* Logo */}
-        <a href="#" className="flex items-center gap-3 group">
+        <a href="/" className="flex items-center gap-3 group">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/logo.png"

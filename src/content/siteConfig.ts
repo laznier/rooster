@@ -3,14 +3,14 @@ export const siteConfig = {
   tagline: 'Portable Voice-Driven C2 Training',
 
   navigation: [
-    { label: 'Samples', href: '#samples' },
-    { label: 'The Gap', href: '#training-gap' },
-    { label: 'Market Gap', href: '#market-gap' },
-    { label: 'Solution', href: '#solution' },
-    { label: 'How It Works', href: '#how-it-works' },
-    { label: 'Web Demo', href: '#prototype' },
-    { label: 'Roadmap', href: '#roadmap' },
-    { label: 'Connect', href: '#connect' },
+    { label: 'Samples', href: '/#samples' },
+    { label: 'The Gap', href: '/#training-gap' },
+    { label: 'Market Gap', href: '/#market-gap' },
+    { label: 'Solution', href: '/#solution' },
+    { label: 'How It Works', href: '/#how-it-works' },
+    { label: 'Web Demo', href: '/#prototype' },
+    { label: 'Roadmap', href: '/#roadmap' },
+    { label: 'Connect', href: '/#connect' },
   ],
 
   links: {

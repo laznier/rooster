@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Header } from '@/components/Header';
-import { Footer } from '@/components/Footer';
+import { ConditionalFooter } from '@/components/ConditionalFooter';
 
 export const metadata: Metadata = {
   title: 'Rooster — Portable Voice-Driven C2 Training',
@@ -36,7 +36,7 @@ export default function RootLayout({
       <body className="flex min-h-screen flex-col bg-navy-950">
         <Header />
         <main className="flex-1">{children}</main>
-        <Footer />
+        <ConditionalFooter />
       </body>
     </html>
   );
