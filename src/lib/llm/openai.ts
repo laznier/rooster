@@ -3,7 +3,9 @@ import type {
   ChatMessage,
   InterviewContext,
   LLMProvider,
+  ReplyResult,
   SummaryResult,
+  TokenUsage,
   ValidationSummaryStruct,
 } from './types';
 import {
@@ -27,7 +29,7 @@ export const openaiProvider: LLMProvider = {
   async generateInterviewReply(
     messages: ChatMessage[],
     context: InterviewContext,
-  ): Promise<string> {
+  ): Promise<ReplyResult> {
     const preface = buildContextPreface(context);
     const sys: ChatMessage = {
       role: 'system',
@@ -43,7 +45,7 @@ export const openaiProvider: LLMProvider = {
     });
     const text = resp.choices[0]?.message?.content?.trim();
     if (!text) throw new Error('Empty LLM response');
-    return text;
+    return { text, usage: toUsage(resp.usage) };
   },
 
   async extractValidationSummary(
@@ -105,9 +107,17 @@ export const openaiProvider: LLMProvider = {
       sensitive_info_flag: Boolean(parsed.sensitive_info_flag),
     };
 
-    return { summary_text, summary_struct: struct };
+    return { summary_text, summary_struct: struct, usage: toUsage(resp.usage) };
   },
 };
+
+function toUsage(u: { prompt_tokens?: number; completion_tokens?: number; total_tokens?: number } | undefined): TokenUsage {
+  return {
+    prompt_tokens: u?.prompt_tokens ?? 0,
+    completion_tokens: u?.completion_tokens ?? 0,
+    total_tokens: u?.total_tokens ?? 0,
+  };
+}
 
 function toIntOrNull(v: unknown, min: number, max: number): number | null {
   if (v === null || v === undefined || v === '') return null;

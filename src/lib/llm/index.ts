@@ -19,5 +19,5 @@ export function getProvider(): LLMProvider {
   return provider;
 }
 
-export type { ChatMessage, InterviewContext, SummaryResult, ValidationSummaryStruct } from './types';
+export type { ChatMessage, InterviewContext, ReplyResult, SummaryResult, TokenUsage, ValidationSummaryStruct } from './types';
 export { INTERVIEW_COMPLETE_TOKEN } from './prompts';

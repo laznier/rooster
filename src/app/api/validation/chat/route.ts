@@ -52,14 +52,17 @@ export async function POST(req: Request) {
     };
 
     const reply = await getProvider().generateInterviewReply(transcript, ctx);
-    const isComplete = reply.includes(INTERVIEW_COMPLETE_TOKEN);
-    const visibleReply = reply.replace(INTERVIEW_COMPLETE_TOKEN, '').trim();
+    const isComplete = reply.text.includes(INTERVIEW_COMPLETE_TOKEN);
+    const visibleReply = reply.text.replace(INTERVIEW_COMPLETE_TOKEN, '').trim();
 
     transcript.push({ role: 'assistant', content: visibleReply });
 
     await sql`
-      UPDATE validation_sessions
-      SET transcript = ${JSON.stringify(transcript)}::jsonb
+      UPDATE validation_sessions SET
+        transcript = ${JSON.stringify(transcript)}::jsonb,
+        tokens_in  = tokens_in  + ${reply.usage.prompt_tokens},
+        tokens_out = tokens_out + ${reply.usage.completion_tokens},
+        llm_calls  = llm_calls  + 1
       WHERE id = ${sessionId};
     `;
 

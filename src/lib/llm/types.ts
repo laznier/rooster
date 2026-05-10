@@ -36,6 +36,18 @@ export interface ValidationSummaryStruct {
 export interface SummaryResult {
   summary_text: string;
   summary_struct: ValidationSummaryStruct;
+  usage: TokenUsage;
+}
+
+export interface TokenUsage {
+  prompt_tokens: number;
+  completion_tokens: number;
+  total_tokens: number;
+}
+
+export interface ReplyResult {
+  text: string;
+  usage: TokenUsage;
 }
 
 export interface LLMProvider {
@@ -43,7 +55,7 @@ export interface LLMProvider {
   generateInterviewReply(
     messages: ChatMessage[],
     context: InterviewContext,
-  ): Promise<string>;
+  ): Promise<ReplyResult>;
 
   /** Final structured + narrative summary of the transcript. */
   extractValidationSummary(

@@ -31,7 +31,8 @@ export async function GET(req: Request) {
              role_category, experience_level, relationship,
              name, email, followup_consent,
              transcript, summary_text, summary_struct,
-             summary_confirmed, summary_user_edits, sensitive_info_flag
+             summary_confirmed, summary_user_edits, sensitive_info_flag,
+             tokens_in, tokens_out, llm_calls
       FROM validation_sessions
       ORDER BY started_at DESC;
     `;
@@ -86,6 +87,9 @@ function toCsv(rows: Record<string, unknown>[]): string {
       followup_consent: r.followup_consent,
       summary_confirmed: r.summary_confirmed,
       sensitive_info_flag: r.sensitive_info_flag,
+      tokens_in: r.tokens_in,
+      tokens_out: r.tokens_out,
+      llm_calls: r.llm_calls,
       summary_text: r.summary_text,
       problem_understanding: struct.problem_understanding ?? '',
       pain_score_1_7: struct.pain_score_1_7 ?? '',

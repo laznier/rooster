@@ -46,7 +46,7 @@ export async function POST(req: Request) {
       relationship: s.relationship,
     };
 
-    const { summary_text, summary_struct } = await getProvider().extractValidationSummary(
+    const { summary_text, summary_struct, usage } = await getProvider().extractValidationSummary(
       transcript,
       ctx,
     );
@@ -55,7 +55,10 @@ export async function POST(req: Request) {
       UPDATE validation_sessions SET
         summary_text        = ${summary_text},
         summary_struct      = ${JSON.stringify(summary_struct)}::jsonb,
-        sensitive_info_flag = ${Boolean(summary_struct.sensitive_info_flag)}
+        sensitive_info_flag = ${Boolean(summary_struct.sensitive_info_flag)},
+        tokens_in           = tokens_in  + ${usage.prompt_tokens},
+        tokens_out          = tokens_out + ${usage.completion_tokens},
+        llm_calls           = llm_calls  + 1
       WHERE id = ${sessionId};
     `;
 

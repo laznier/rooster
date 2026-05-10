@@ -40,9 +40,16 @@ export function ensureSchema(): Promise<void> {
           summary_struct         JSONB,
           summary_confirmed      BOOLEAN NOT NULL DEFAULT FALSE,
           summary_user_edits     TEXT,
-          sensitive_info_flag    BOOLEAN NOT NULL DEFAULT FALSE
+          sensitive_info_flag    BOOLEAN NOT NULL DEFAULT FALSE,
+          tokens_in              INTEGER NOT NULL DEFAULT 0,
+          tokens_out             INTEGER NOT NULL DEFAULT 0,
+          llm_calls              INTEGER NOT NULL DEFAULT 0
         );
       `;
+      // Backfill columns on pre-existing DBs (idempotent).
+      await sql`ALTER TABLE validation_sessions ADD COLUMN IF NOT EXISTS tokens_in  INTEGER NOT NULL DEFAULT 0;`;
+      await sql`ALTER TABLE validation_sessions ADD COLUMN IF NOT EXISTS tokens_out INTEGER NOT NULL DEFAULT 0;`;
+      await sql`ALTER TABLE validation_sessions ADD COLUMN IF NOT EXISTS llm_calls  INTEGER NOT NULL DEFAULT 0;`;
 
       // Seed invite tokens from env on first init (dev convenience)
       const seed = process.env.VALIDATION_SEED_INVITES;
