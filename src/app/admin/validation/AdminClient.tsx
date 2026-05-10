@@ -47,6 +47,7 @@ interface Invite {
 
 export function AdminClient() {
   const [token, setToken] = useState('');
+  const [localMode, setLocalMode] = useState<boolean | null>(null); // null = probing
   const [sessions, setSessions] = useState<Session[] | null>(null);
   const [invites, setInvites] = useState<Invite[] | null>(null);
   const [usage, setUsage] = useState<UsageStats | null>(null);
@@ -64,9 +65,10 @@ export function AdminClient() {
   }, []);
 
   const authHeader = () => ({ Authorization: `Bearer ${token.trim()}` });
+  const canCall = () => localMode === true || token.trim().length > 0;
 
   const loadInvites = useCallback(async () => {
-    if (!token.trim()) return;
+    if (!canCall()) return;
     try {
       const res = await fetch('/api/validation/invites', { headers: authHeader() });
       if (!res.ok) {
@@ -80,20 +82,20 @@ export function AdminClient() {
       setError('Network error.');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]);
+  }, [token, localMode]);
 
   const loadUsage = useCallback(async () => {
-    if (!token.trim()) return;
+    if (!canCall()) return;
     try {
       const res = await fetch('/api/validation/usage', { headers: authHeader() });
       if (!res.ok) { setUsage(null); return; }
       setUsage(await res.json());
     } catch { /* ignore */ }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]);
+  }, [token, localMode]);
 
   const createInvite = useCallback(async () => {
-    if (!token.trim()) return;
+    if (!canCall()) return;
     setBusyInvite(true);
     setError(null);
     try {
@@ -172,6 +174,44 @@ export function AdminClient() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, loadInvites, loadUsage]);
 
+  // On mount, probe whether we're in a local (no-auth) environment.
+  // The backend skips bearer auth when `process.env.VERCEL` is unset.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch('/api/validation/usage');
+        if (cancelled) return;
+        if (res.ok) {
+          setLocalMode(true);
+          // Auto-load everything since no token is required.
+          setLoading(true);
+          try {
+            const sres = await fetch('/api/validation/export?format=json');
+            if (sres.ok) {
+              const data = await sres.json();
+              if (!cancelled) setSessions(data.sessions || []);
+            }
+            const ires = await fetch('/api/validation/invites');
+            if (ires.ok) {
+              const data = await ires.json();
+              if (!cancelled) setInvites(data.invites || []);
+            }
+            if (!cancelled) setUsage(await res.json());
+          } finally {
+            if (!cancelled) setLoading(false);
+          }
+        } else {
+          setLocalMode(false);
+        }
+      } catch {
+        if (!cancelled) setLocalMode(false);
+      }
+    })();
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const downloadCsv = useCallback(async () => {
     const res = await fetch('/api/validation/export?format=csv', {
       headers: authHeader(),
@@ -196,32 +236,63 @@ export function AdminClient() {
         <div className="h-0.5 w-12 bg-accent-500 rounded-full mb-8" />
 
         <div className="rounded-xl border border-navy-800 bg-navy-900/40 p-5 mb-6">
-          <label className="block text-xs font-medium text-navy-300 uppercase tracking-wider mb-2">
-            Admin token
-          </label>
-          <div className="flex flex-wrap gap-3">
-            <input
-              type="password"
-              value={token}
-              onChange={(e) => setToken(e.target.value)}
-              placeholder="VALIDATION_ADMIN_TOKEN"
-              className="flex-1 min-w-[260px] rounded-lg border border-navy-700 bg-navy-900 px-3 py-2.5 text-sm text-white focus:border-accent-500 focus:outline-none"
-            />
-            <button
-              onClick={load}
-              disabled={!token.trim() || loading}
-              className="rounded-lg bg-accent-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-accent-500 disabled:bg-navy-700"
-            >
-              {loading ? 'Loading…' : 'Load sessions'}
-            </button>
-            <button
-              onClick={downloadCsv}
-              disabled={!token.trim()}
-              className="rounded-lg border border-navy-600 px-4 py-2.5 text-sm font-semibold text-navy-200 hover:bg-navy-800 hover:text-white disabled:opacity-50"
-            >
-              Download CSV
-            </button>
-          </div>
+          {localMode === true ? (
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <span className="inline-flex items-center gap-2 rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold text-emerald-300 ring-1 ring-emerald-500/30">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                  Local dev — no token required
+                </span>
+                <span className="text-xs text-navy-400">
+                  Admin routes are blocked on Vercel by middleware.
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                <button
+                  onClick={load}
+                  disabled={loading}
+                  className="rounded-lg bg-accent-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-accent-500 disabled:bg-navy-700"
+                >
+                  {loading ? 'Refreshing…' : 'Refresh'}
+                </button>
+                <button
+                  onClick={downloadCsv}
+                  className="rounded-lg border border-navy-600 px-4 py-2.5 text-sm font-semibold text-navy-200 hover:bg-navy-800 hover:text-white"
+                >
+                  Download CSV
+                </button>
+              </div>
+            </div>
+          ) : (
+            <>
+              <label className="block text-xs font-medium text-navy-300 uppercase tracking-wider mb-2">
+                Admin token
+              </label>
+              <div className="flex flex-wrap gap-3">
+                <input
+                  type="password"
+                  value={token}
+                  onChange={(e) => setToken(e.target.value)}
+                  placeholder="VALIDATION_ADMIN_TOKEN"
+                  className="flex-1 min-w-[260px] rounded-lg border border-navy-700 bg-navy-900 px-3 py-2.5 text-sm text-white focus:border-accent-500 focus:outline-none"
+                />
+                <button
+                  onClick={load}
+                  disabled={!token.trim() || loading}
+                  className="rounded-lg bg-accent-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-accent-500 disabled:bg-navy-700"
+                >
+                  {loading ? 'Loading…' : 'Load sessions'}
+                </button>
+                <button
+                  onClick={downloadCsv}
+                  disabled={!token.trim()}
+                  className="rounded-lg border border-navy-600 px-4 py-2.5 text-sm font-semibold text-navy-200 hover:bg-navy-800 hover:text-white disabled:opacity-50"
+                >
+                  Download CSV
+                </button>
+              </div>
+            </>
+          )}
           {error && <p className="mt-3 text-sm text-red-300">{error}</p>}
         </div>
 

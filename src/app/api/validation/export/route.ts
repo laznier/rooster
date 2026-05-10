@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { ensureSchema, sql } from '@/lib/db';
+import { isAdminAuthorized } from '@/lib/validation/auth';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -7,16 +8,10 @@ export const dynamic = 'force-dynamic';
 /**
  * Admin-only review + export endpoint.
  *   GET /api/validation/export?format=json|csv
- *   Authorization: Bearer <VALIDATION_ADMIN_TOKEN>
+ *   Authorization: Bearer <VALIDATION_ADMIN_TOKEN> (skipped in local env)
  */
 export async function GET(req: Request) {
-  const adminToken = process.env.VALIDATION_ADMIN_TOKEN;
-  if (!adminToken) {
-    return NextResponse.json({ error: 'admin_not_configured' }, { status: 503 });
-  }
-  const auth = req.headers.get('authorization') || '';
-  const provided = auth.startsWith('Bearer ') ? auth.slice(7).trim() : '';
-  if (!safeEqual(provided, adminToken)) {
+  if (!isAdminAuthorized(req)) {
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
   }
 
@@ -53,13 +48,6 @@ export async function GET(req: Request) {
     console.error('[validation/export]', err);
     return NextResponse.json({ error: 'server_error' }, { status: 500 });
   }
-}
-
-function safeEqual(a: string, b: string): boolean {
-  if (a.length !== b.length) return false;
-  let r = 0;
-  for (let i = 0; i < a.length; i++) r |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  return r === 0;
 }
 
 function stamp(): string {

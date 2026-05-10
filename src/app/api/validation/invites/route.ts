@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { ensureSchema, sql } from '@/lib/db';
 import { z } from 'zod';
+import { isAdminAuthorized } from '@/lib/validation/auth';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -11,7 +12,7 @@ export const dynamic = 'force-dynamic';
  *   POST   /api/validation/invites              -> create   { token?, label? }
  *   PATCH  /api/validation/invites              -> toggle   { token, active }
  *   DELETE /api/validation/invites?token=...    -> remove
- * All require: Authorization: Bearer <VALIDATION_ADMIN_TOKEN>
+ * Require: Authorization: Bearer <VALIDATION_ADMIN_TOKEN> (skipped in local env)
  */
 
 const CreateSchema = z.object({
@@ -25,14 +26,7 @@ const PatchSchema = z.object({
 });
 
 function authorized(req: Request): boolean {
-  const adminToken = process.env.VALIDATION_ADMIN_TOKEN;
-  if (!adminToken) return false;
-  const auth = req.headers.get('authorization') || '';
-  const provided = auth.startsWith('Bearer ') ? auth.slice(7).trim() : '';
-  if (provided.length !== adminToken.length) return false;
-  let r = 0;
-  for (let i = 0; i < provided.length; i++) r |= provided.charCodeAt(i) ^ adminToken.charCodeAt(i);
-  return r === 0;
+  return isAdminAuthorized(req);
 }
 
 function unauth() {
