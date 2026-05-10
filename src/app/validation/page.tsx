@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import { ValidationFlow } from './ValidationFlow';
 
 export const metadata: Metadata = {
-  title: 'Rooster C2 — Validation Interview',
+  title: '"Rooster C2" AI-Enabled Simulator — Validation Interview',
   description:
-    'Confidential, unclassified customer-discovery interview for the Rooster C2 training venture.',
+    'Confidential, unclassified customer-discovery interview for the "Rooster C2" AI-Enabled Simulator training venture.',
   robots: { index: false, follow: false },
 };
 

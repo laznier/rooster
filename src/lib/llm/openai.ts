@@ -40,7 +40,7 @@ export const openaiProvider: LLMProvider = {
 
     const resp = await client().chat.completions.create({
       model: MODEL,
-      temperature: 0.4,
+      temperature: 0.6,
       messages: [sys, ...messages],
     });
     const text = resp.choices[0]?.message?.content?.trim();

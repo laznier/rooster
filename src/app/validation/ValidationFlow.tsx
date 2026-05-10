@@ -12,8 +12,13 @@ declare global {
   }
 }
 
-const VIDEO_ID = 'A8JCD8vycfY'; // Rooster C2 intro (siteConfig.links.overviewVideo)
-const REQUIRED_PCT = 90;        // gate threshold
+const VIDEO_ID = 'A8JCD8vycfY'; // "Rooster C2" AI-Enabled Simulator intro
+const REQUIRED_PCT = 50;        // gate threshold (% of video watched)
+
+// Approximate target number of user turns for the chat progress bar.
+// The interviewer is told to wrap up around 10–14 exchanges; we display
+// progress against this so respondents can see they're making headway.
+const TARGET_USER_TURNS = 12;
 
 function loadYouTubeApi(): Promise<void> {
   return new Promise((resolve) => {
@@ -345,13 +350,13 @@ export function ValidationFlow({ initialInvite }: { initialInvite: string }) {
   // ─────────────────────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-navy-950 text-white">
-      <div className="container-narrow py-12 md:py-16">
+      <div className="container-narrow py-8 sm:py-12 md:py-16">
         <header className="mb-10">
           <p className="text-xs font-medium text-accent-400 uppercase tracking-[0.2em] mb-3">
             Validation · Customer Discovery
           </p>
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">
-            Rooster C2 Validation Interview
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mb-3">
+            &ldquo;Rooster C2&rdquo; AI-Enabled Simulator — Validation Interview
           </h1>
           <div className="h-0.5 w-12 bg-accent-500 rounded-full" />
           <ProgressBar stage={stage} />
@@ -397,14 +402,16 @@ export function ValidationFlow({ initialInvite }: { initialInvite: string }) {
                 general and unclassified.
               </li>
               <li>
-                Rooster C2 is an early-stage training concept and is{' '}
+                &ldquo;Rooster C2&rdquo; AI-Enabled Simulator is an early-stage training
+                concept and is{' '}
                 <span className="font-semibold text-white">not intended for real-world
                 mission planning or operational decision-making</span>.
               </li>
               <li>
-                Your feedback may be used to improve Rooster C2 and to support
-                AI Venture Velocity Challenge experiment documentation. Your name
-                and email are optional and used only for follow-up if you opt in.
+                Your feedback may be used to improve &ldquo;Rooster C2&rdquo; AI-Enabled
+                Simulator and to support AI Venture Velocity Challenge experiment
+                documentation. Your name and email are optional and used only for
+                follow-up if you opt in.
               </li>
               <li>
                 The interview is conducted by an AI interviewer and typically
@@ -541,7 +548,7 @@ export function ValidationFlow({ initialInvite }: { initialInvite: string }) {
                   onChange={(e) => setIntake({ ...intake, followupConsent: e.target.checked })}
                   className="mt-1 h-4 w-4 accent-accent-500"
                 />
-                <span>I&rsquo;m open to a brief follow-up about Rooster C2.</span>
+                <span>I&rsquo;m open to a brief follow-up about &ldquo;Rooster C2&rdquo; AI-Enabled Simulator.</span>
               </label>
             </div>
             <div className="mt-7 flex justify-end">
@@ -554,24 +561,39 @@ export function ValidationFlow({ initialInvite }: { initialInvite: string }) {
 
         {stage === 'chat' && (
           <Card>
-            <div className="mb-4 flex items-center justify-between">
+            <div className="mb-4 flex items-center justify-between gap-3">
               <h2 className="text-xl font-semibold">Interview</h2>
-              <span className="text-xs text-navy-400">{userTurns} answers</span>
+              <span className="text-xs text-navy-400 whitespace-nowrap">
+                {chatComplete
+                  ? 'Complete'
+                  : `Question ${Math.min(userTurns + 1, TARGET_USER_TURNS)} of ~${TARGET_USER_TURNS}`}
+              </span>
             </div>
+
+            {/* Interview-progress bar (separate from the overall stage progress) */}
+            <div className="mb-4 h-1 w-full overflow-hidden rounded-full bg-navy-800">
+              <div
+                className="h-full bg-accent-500 transition-all"
+                style={{
+                  width: `${chatComplete ? 100 : Math.min(100, Math.round((userTurns / TARGET_USER_TURNS) * 100))}%`,
+                }}
+              />
+            </div>
+
             <p className="text-xs text-navy-400 leading-relaxed mb-5">
-              The AI interviewer is neutral and is not selling Rooster.
-              Honest, candid, critical feedback is most useful. Keep it general
-              and unclassified.
+              The AI interviewer is neutral and is not selling
+              &ldquo;Rooster C2&rdquo; AI-Enabled Simulator. Honest, candid,
+              critical feedback is most useful. Keep it general and unclassified.
             </p>
 
-            <div className="space-y-4 max-h-[55vh] overflow-y-auto pr-2 mb-5">
+            <div className="space-y-4 max-h-[55vh] overflow-y-auto pr-1 sm:pr-2 mb-5">
               {messages.map((m, i) => (
                 <div
                   key={i}
                   className={
                     m.role === 'assistant'
-                      ? 'rounded-xl border border-navy-800 bg-navy-900/70 px-4 py-3 text-sm text-navy-100 leading-relaxed'
-                      : 'rounded-xl border border-accent-500/30 bg-accent-500/10 px-4 py-3 text-sm text-white leading-relaxed ml-8'
+                      ? 'rounded-xl border border-navy-800 bg-navy-900/70 px-3 sm:px-4 py-3 text-sm text-navy-100 leading-relaxed'
+                      : 'rounded-xl border border-accent-500/30 bg-accent-500/10 px-3 sm:px-4 py-3 text-sm text-white leading-relaxed ml-4 sm:ml-8'
                   }
                 >
                   <p className="text-[10px] uppercase tracking-wider mb-1 text-navy-400">
@@ -596,11 +618,11 @@ export function ValidationFlow({ initialInvite }: { initialInvite: string }) {
                       sendTurn();
                     }
                   }}
-                  placeholder="Type your answer… (⌘/Ctrl+Enter to send)"
+                  placeholder="Type your answer… (Ctrl+Enter or Cmd+Enter to send)"
                   rows={3}
-                  className="w-full rounded-lg border border-navy-700 bg-navy-900 px-4 py-3 text-sm text-white placeholder:text-navy-500 focus:border-accent-500 focus:outline-none resize-none"
+                  className="w-full rounded-lg border border-navy-700 bg-navy-900 px-3 sm:px-4 py-3 text-base sm:text-sm text-white placeholder:text-navy-500 focus:border-accent-500 focus:outline-none resize-none"
                 />
-                <div className="mt-3 flex items-center justify-between">
+                <div className="mt-3 flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3">
                   <p className="text-[11px] text-navy-500">
                     Reminder: keep responses general and unclassified.
                   </p>
@@ -676,9 +698,9 @@ export function ValidationFlow({ initialInvite }: { initialInvite: string }) {
           <Card>
             <h2 className="text-xl font-semibold mb-3">Thank you</h2>
             <p className="text-sm text-navy-200 leading-relaxed mb-3">
-              Your feedback has been recorded. It will inform Rooster C2&rsquo;s
-              validation work and support AI Venture Velocity Challenge experiment
-              documentation.
+              Your feedback has been recorded. It will inform &ldquo;Rooster C2&rdquo;
+              AI-Enabled Simulator&rsquo;s validation work and support AI Venture
+              Velocity Challenge experiment documentation.
             </p>
             <p className="text-sm text-navy-300 leading-relaxed">
               You can close this tab.
@@ -695,7 +717,7 @@ export function ValidationFlow({ initialInvite }: { initialInvite: string }) {
 // ============================================================================
 function Card({ children }: { children: React.ReactNode }) {
   return (
-    <section className="rounded-2xl border border-navy-800 bg-navy-900/40 p-6 md:p-8 shadow-2xl shadow-black/20">
+    <section className="rounded-2xl border border-navy-800 bg-navy-900/40 p-4 sm:p-6 md:p-8 shadow-2xl shadow-black/20">
       {children}
     </section>
   );

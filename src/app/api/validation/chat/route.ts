@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
 const OPENING_MESSAGE =
-  "Thanks for taking the time. To start: in a sentence or two, what is your role and how does it relate to C2 training, simulation, readiness, or defense technology?";
+  "To start: in a sentence or two, what is your role and how does it relate to C2 training, simulation, readiness, or defense technology?";
 
 export async function POST(req: Request) {
   try {
