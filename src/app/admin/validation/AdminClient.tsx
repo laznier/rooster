@@ -160,6 +160,21 @@ export function AdminClient() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, loadInvites]);
 
+  const deleteSession = useCallback(async (id: string) => {
+    if (!confirm(`Permanently delete session ${id}? This cannot be undone.`)) return;
+    const res = await fetch(`/api/validation/export?id=${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+      headers: authHeader(),
+    });
+    if (!res.ok) {
+      setError(res.status === 401 ? 'Invalid admin token.' : 'Could not delete session.');
+      return;
+    }
+    setSessions((prev) => (prev ? prev.filter((s) => s.id !== id) : prev));
+    if (open === id) setOpen(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token, open]);
+
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -506,12 +521,21 @@ export function AdminClient() {
                         <Td>{s.invite_token}</Td>
                         <Td>{s.email ?? '—'}</Td>
                         <Td>
-                          <button
-                            onClick={() => setOpen(open === s.id ? null : s.id)}
-                            className="text-accent-400 hover:text-accent-300"
-                          >
-                            {open === s.id ? 'Hide' : 'View'}
-                          </button>
+                          <div className="flex items-center gap-3">
+                            <button
+                              onClick={() => setOpen(open === s.id ? null : s.id)}
+                              className="text-accent-400 hover:text-accent-300"
+                            >
+                              {open === s.id ? 'Hide' : 'View'}
+                            </button>
+                            <button
+                              onClick={() => deleteSession(s.id)}
+                              className="text-red-400 hover:text-red-300"
+                              title="Permanently delete this session"
+                            >
+                              Delete
+                            </button>
+                          </div>
                         </Td>
                       </tr>
                     );

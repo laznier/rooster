@@ -50,6 +50,35 @@ export async function GET(req: Request) {
   }
 }
 
+/**
+ * DELETE /api/validation/export?id=<sessionId>
+ * Admin-only. Permanently removes a single session row (used to prune test
+ * runs from the admin dashboard).
+ */
+export async function DELETE(req: Request) {
+  if (!isAdminAuthorized(req)) {
+    return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+  }
+  try {
+    await ensureSchema();
+    const url = new URL(req.url);
+    const id = url.searchParams.get('id');
+    if (!id) {
+      return NextResponse.json({ error: 'missing_id' }, { status: 400 });
+    }
+    const r = await sql`
+      DELETE FROM validation_sessions WHERE id = ${id} RETURNING id;
+    `;
+    if (r.rows.length === 0) {
+      return NextResponse.json({ error: 'not_found' }, { status: 404 });
+    }
+    return NextResponse.json({ ok: true, id });
+  } catch (err) {
+    console.error('[validation/export DELETE]', err);
+    return NextResponse.json({ error: 'server_error' }, { status: 500 });
+  }
+}
+
 function stamp(): string {
   return new Date().toISOString().replace(/[:.]/g, '-');
 }
