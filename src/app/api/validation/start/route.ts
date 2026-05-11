@@ -13,7 +13,7 @@ export async function POST(req: Request) {
     if (!parsed.success) {
       return NextResponse.json({ error: 'invalid_input' }, { status: 400 });
     }
-    const { invite } = parsed.data;
+    const { invite, resumeSessionId } = parsed.data;
 
     const inv = await sql`
       SELECT token, active FROM validation_invites WHERE token = ${invite} LIMIT 1;
@@ -22,30 +22,32 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'invalid_invite' }, { status: 403 });
     }
 
-    // Resume the most recent in-progress session for this invite, if any.
-    // "In progress" = no completed_at AND not yet final-confirmed. This way a
-    // friend who closed the tab partway through (or refreshes the page) picks
-    // up exactly where they left off instead of starting a fresh row.
-    const existing = await sql`
-      SELECT id, consent_confirmed, video_started, video_completed, video_pct,
-             role_category, experience_level, relationship,
-             name, email, followup_consent,
-             transcript, summary_text, summary_struct, summary_confirmed
-      FROM validation_sessions
-      WHERE invite_token = ${invite}
-        AND completed_at IS NULL
-        AND summary_confirmed = FALSE
-      ORDER BY started_at DESC
-      LIMIT 1;
-    `;
-
-    if (existing.rows.length > 0) {
-      const s = existing.rows[0] as unknown as SessionRow;
-      return NextResponse.json({
-        sessionId: s.id,
-        resumed: true,
-        state: buildState(s),
-      });
+    // Only resume an in-progress session if the caller can prove ownership by
+    // presenting the sessionId they were given originally (stored in their
+    // browser). This prevents a second visitor on a *shared* invite link from
+    // landing inside the first visitor's half-finished survey.
+    if (resumeSessionId) {
+      const existing = await sql`
+        SELECT id, consent_confirmed, video_started, video_completed, video_pct,
+               role_category, experience_level, relationship,
+               name, email, followup_consent,
+               transcript, summary_text, summary_struct, summary_confirmed
+        FROM validation_sessions
+        WHERE id = ${resumeSessionId}
+          AND invite_token = ${invite}
+          AND completed_at IS NULL
+          AND summary_confirmed = FALSE
+        LIMIT 1;
+      `;
+      if (existing.rows.length > 0) {
+        const s = existing.rows[0] as unknown as SessionRow;
+        return NextResponse.json({
+          sessionId: s.id,
+          resumed: true,
+          state: buildState(s),
+        });
+      }
+      // Unknown / finished / mismatched id — fall through and start fresh.
     }
 
     const id = cryptoRandomId();

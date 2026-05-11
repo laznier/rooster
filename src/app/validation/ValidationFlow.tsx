@@ -154,6 +154,8 @@ export function ValidationFlow({ initialInvite }: { initialInvite: string }) {
   const [draft, setDraft] = useState('');
   const [chatComplete, setChatComplete] = useState(false);
   const [opener, setOpener] = useState<string>('');
+  const chatScrollRef = useRef<HTMLDivElement | null>(null);
+  const chatBottomRef = useRef<HTMLDivElement | null>(null);
 
   // Summary
   const [summaryText, setSummaryText] = useState('');
@@ -178,10 +180,22 @@ export function ValidationFlow({ initialInvite }: { initialInvite: string }) {
     setBusy(true);
     setError(null);
     try {
+      // If this browser has previously started a session against the same
+      // invite, present that sessionId so the server resumes it. Otherwise
+      // the server issues a fresh sessionId. This prevents a shared invite
+      // link from landing a new visitor inside someone else's survey.
+      let resumeSessionId: string | undefined;
+      try {
+        if (typeof window !== 'undefined') {
+          const stored = window.localStorage.getItem(`rooster.validation.session.${invite.trim()}`);
+          if (stored) resumeSessionId = stored;
+        }
+      } catch { /* localStorage may be unavailable */ }
+
       const res = await fetch('/api/validation/start', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ invite: invite.trim() }),
+        body: JSON.stringify({ invite: invite.trim(), resumeSessionId }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -190,6 +204,11 @@ export function ValidationFlow({ initialInvite }: { initialInvite: string }) {
         return;
       }
       setSessionId(data.sessionId);
+      try {
+        if (typeof window !== 'undefined' && data.sessionId) {
+          window.localStorage.setItem(`rooster.validation.session.${invite.trim()}`, data.sessionId);
+        }
+      } catch { /* ignore */ }
 
       // Resume from server-side state (so a refresh / new tab on the same
       // invite picks up exactly where the respondent left off).
@@ -413,11 +432,18 @@ export function ValidationFlow({ initialInvite }: { initialInvite: string }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sessionId, confirmed, edits: edits.trim() || undefined }),
       });
+      // Clear the per-invite session pointer so the next person who opens
+      // this shared link gets a fresh survey instead of resuming this one.
+      try {
+        if (typeof window !== 'undefined' && invite) {
+          window.localStorage.removeItem(`rooster.validation.session.${invite.trim()}`);
+        }
+      } catch { /* ignore */ }
       setStage('done');
     } finally {
       setBusy(false);
     }
-  }, [sessionId, edits]);
+  }, [sessionId, edits, invite]);
 
   // Submit micro-survey answers, then trigger summarize.
   const submitRiskSurvey = useCallback(async () => {
@@ -456,6 +482,19 @@ export function ValidationFlow({ initialInvite }: { initialInvite: string }) {
   }, [sessionId, riskAnswers, summarize]);
 
   const userTurns = useMemo(() => messages.filter((m) => m.role === 'user').length, [messages]);
+
+  // Auto-scroll the chat window to the bottom whenever a new message arrives
+  // or the interviewer is “thinking”. Uses smooth scroll within the chat
+  // container itself so the page scroll position doesn't jump on mobile.
+  useEffect(() => {
+    if (stage !== 'chat') return;
+    const el = chatScrollRef.current;
+    if (!el) return;
+    // Defer to next frame so layout has the new message height.
+    requestAnimationFrame(() => {
+      el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+    });
+  }, [messages, busy, stage]);
 
   // ─────────────────────────────────────────────────────────────────────────
   // Render
@@ -709,14 +748,17 @@ export function ValidationFlow({ initialInvite }: { initialInvite: string }) {
               critical feedback is most useful. Keep it general and unclassified.
             </p>
 
-            <div className="space-y-4 max-h-[55vh] overflow-y-auto pr-1 sm:pr-2 mb-5">
+            <div
+              ref={chatScrollRef}
+              className="space-y-3 sm:space-y-4 h-[48vh] sm:h-[55vh] overflow-y-auto overscroll-contain pr-1 sm:pr-2 mb-4 sm:mb-5 scroll-smooth"
+            >
               {messages.map((m, i) => (
                 <div
                   key={i}
                   className={
                     m.role === 'assistant'
-                      ? 'rounded-xl border border-navy-800 bg-navy-900/70 px-3 sm:px-4 py-3 text-sm text-navy-100 leading-relaxed'
-                      : 'rounded-xl border border-accent-500/30 bg-accent-500/10 px-3 sm:px-4 py-3 text-sm text-white leading-relaxed ml-4 sm:ml-8'
+                      ? 'rounded-xl border border-navy-800 bg-navy-900/70 px-3 sm:px-4 py-2.5 sm:py-3 text-sm text-navy-100 leading-relaxed'
+                      : 'rounded-xl border border-accent-500/30 bg-accent-500/10 px-3 sm:px-4 py-2.5 sm:py-3 text-sm text-white leading-relaxed ml-3 sm:ml-8'
                   }
                 >
                   <p className="text-[10px] uppercase tracking-wider mb-1 text-navy-400">
@@ -728,6 +770,7 @@ export function ValidationFlow({ initialInvite }: { initialInvite: string }) {
               {busy && (
                 <p className="text-xs text-navy-400 italic">Interviewer is thinking…</p>
               )}
+              <div ref={chatBottomRef} />
             </div>
 
             {!chatComplete ? (
@@ -762,12 +805,10 @@ export function ValidationFlow({ initialInvite }: { initialInvite: string }) {
                   the venture’s 5 highest-risk assumptions you’re qualified to evaluate.
                 </p>
                 <PrimaryButton onClick={() => {
-                  // Seed default answers (relevant=true) for the risks tied to this role.
-                  setRiskAnswers((prev) => {
-                    const next: RiskAnswers = { ...prev };
-                    for (const id of relevantRiskIds) {
-                      if (!next[id]) next[id] = blankAnswer();
-                    }
+                  // Seed default answers (relevant=true) for the risks tied to this role only.
+                  setRiskAnswers(() => {
+                    const next: RiskAnswers = {};
+                    for (const id of relevantRiskIds) next[id] = blankAnswer();
                     return next;
                   });
                   setStage('riskMicro');
@@ -783,88 +824,46 @@ export function ValidationFlow({ initialInvite }: { initialInvite: string }) {
           <Card>
             <h2 className="text-xl font-semibold mb-2">Quick risk calibration</h2>
             <p className="text-sm text-navy-300 leading-relaxed mb-5">
-              Below are the venture&rsquo;s 5 highest-risk assumptions. We&rsquo;ve pre-selected
-              the ones your role is best positioned to evaluate — uncheck any you can&rsquo;t
-              credibly score, or add others. For each, give a 1–7 probability of failure
-              and impact-if-failure, plus an optional three-point estimate. This drives
-              the founders&rsquo; risk dashboard.
+              Below are the venture&rsquo;s highest-risk assumptions your role is
+              best positioned to evaluate. For each, give a 0–10 score for
+              likelihood of failure and impact if it fails.
             </p>
 
             <div className="space-y-5">
-              {RISKS.map((r) => {
+              {RISKS.filter((r) => relevantRiskIds.includes(r.id as RiskId)).map((r) => {
                 const id = r.id as RiskId;
                 const a = riskAnswers[id] ?? blankAnswer();
                 const setA = (patch: Partial<RiskAnswer>) =>
                   setRiskAnswers((prev) => ({ ...prev, [id]: { ...(prev[id] ?? blankAnswer()), ...patch } }));
-                const isRecommended = relevantRiskIds.includes(id);
                 return (
                   <div
                     key={id}
-                    className={
-                      'rounded-xl border p-4 ' +
-                      (a.relevant
-                        ? 'border-navy-700 bg-navy-900/60'
-                        : 'border-navy-800 bg-navy-950/40 opacity-70')
-                    }
+                    className="rounded-xl border border-navy-700 bg-navy-900/60 p-4"
                   >
-                    <label className="flex items-start gap-3 cursor-pointer mb-3">
-                      <input
-                        type="checkbox"
-                        checked={a.relevant}
-                        onChange={(e) => setA({ relevant: e.target.checked })}
-                        className="mt-1 h-4 w-4 accent-accent-500"
+                    <div className="mb-3">
+                      <p className="font-semibold text-white">
+                        {r.id}. {r.title}
+                      </p>
+                      <p className="mt-1 text-xs text-navy-300 leading-relaxed">
+                        {r.description}
+                      </p>
+                    </div>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <LikertField
+                        label="Likelihood of failure (0 = no chance, 10 = certain)"
+                        min={0}
+                        max={10}
+                        value={a.p_failure_0_10}
+                        onChange={(v) => setA({ p_failure_0_10: v })}
                       />
-                      <span className="flex-1">
-                        <span className="block font-semibold text-white">
-                          {r.id}. {r.title}{' '}
-                          {isRecommended && (
-                            <span className="ml-2 inline-block rounded bg-accent-500/20 px-1.5 py-0.5 text-[10px] uppercase tracking-wider text-accent-300">
-                              your role
-                            </span>
-                          )}
-                        </span>
-                        <span className="mt-1 block text-xs text-navy-300 leading-relaxed">
-                          {r.description}
-                        </span>
-                      </span>
-                    </label>
-
-                    {a.relevant && (
-                      <div className="grid gap-4 md:grid-cols-3 pl-7">
-                        <LikertField
-                          label="Probability this assumption fails (0 = no chance, 10 = certain)"
-                          min={0}
-                          max={10}
-                          value={a.p_failure_0_10}
-                          onChange={(v) => setA({ p_failure_0_10: v })}
-                        />
-                        <LikertField
-                          label="Impact if it fails (0 = no impact, 10 = venture-killing)"
-                          min={0}
-                          max={10}
-                          value={a.impact_0_10}
-                          onChange={(v) => setA({ impact_0_10: v })}
-                        />
-                        <LikertField
-                          label="Your confidence in these scores (1 = guess, 5 = high)"
-                          max={5}
-                          value={a.confidence_1_5}
-                          onChange={(v) => setA({ confidence_1_5: v })}
-                        />
-
-                        <div className="md:col-span-3">
-                          <p className="text-[11px] uppercase tracking-wider text-navy-400 mb-2">
-                            Optional three-point estimate — {r.pertMetric.label} ({r.pertMetric.unit})
-                          </p>
-                          <p className="text-[11px] text-navy-500 mb-2">{r.pertMetric.hint}</p>
-                          <div className="grid grid-cols-3 gap-2">
-                            <NumField label="min"    value={a.pert_min}    onChange={(v) => setA({ pert_min: v })} />
-                            <NumField label="likely" value={a.pert_likely} onChange={(v) => setA({ pert_likely: v })} />
-                            <NumField label="max"    value={a.pert_max}    onChange={(v) => setA({ pert_max: v })} />
-                          </div>
-                        </div>
-                      </div>
-                    )}
+                      <LikertField
+                        label="Impact if it fails (0 = no impact, 10 = venture-killing)"
+                        min={0}
+                        max={10}
+                        value={a.impact_0_10}
+                        onChange={(v) => setA({ impact_0_10: v })}
+                      />
+                    </div>
                   </div>
                 );
               })}

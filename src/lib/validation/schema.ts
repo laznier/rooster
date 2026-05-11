@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 export const StartSchema = z.object({
   invite: z.string().trim().min(1).max(128),
+  resumeSessionId: z.string().trim().min(1).max(64).optional(),
 });
 
 export const IntakeSchema = z.object({

@@ -119,8 +119,8 @@ export function RiskBaseline() {
       </div>
       <p className="text-xs text-navy-400 mb-4">
         Bubble position = weighted-mean probability of failure (x) and impact-if-failure (y),
-        weighted by role × confidence. Bubble area = total evidence weight (more credible
-        respondents → bigger). Click a bubble to drill down.
+        weighted by role × confidence. Click a bubble to drill down; evidence weight (n,
+        weight total) is shown in each risk row below.
       </p>
 
       <PIMatrix rollups={rollups} onSelect={(id) => setOpen(open === id ? null : id)} selected={open} />
@@ -157,8 +157,13 @@ function PIMatrix({
   const x = (p: number) => PAD_L + (p / 10) * innerW;
   const y = (i: number) => PAD_T + (1 - i / 10) * innerH;
 
-  const maxW = Math.max(0.0001, ...rollups.map((r) => r.weight_total));
-  const radius = (w: number) => 6 + 22 * Math.sqrt(Math.max(0, w) / maxW);
+  // All bubbles share a single fixed radius so they always fit inside the
+  // plotting area, regardless of weight totals. Evidence weight is surfaced
+  // textually in the per-risk rows below the chart.
+  const BUBBLE_R = 14;
+  // Clamp a circle centre so the full circle stays inside the inner plot box.
+  const clampX = (cx: number) => Math.min(W - PAD_R - BUBBLE_R, Math.max(PAD_L + BUBBLE_R, cx));
+  const clampY = (cy: number) => Math.min(H - PAD_B - BUBBLE_R, Math.max(PAD_T + BUBBLE_R, cy));
 
   // Heatmap cells (0..10 × 0..10) coloured by p*i exposure.
   const cells: { p: number; i: number; expo: number }[] = [];
@@ -222,15 +227,15 @@ function PIMatrix({
             // Placeholder ghost in lower-left when no data.
             return (
               <g key={r.risk_id} opacity="0.35">
-                <circle cx={x(0.3)} cy={y(0.3)} r={10} fill="#334155" stroke="#64748b" strokeDasharray="3 3" />
+                <circle cx={x(0.3)} cy={y(0.3)} r={BUBBLE_R} fill="#334155" stroke="#64748b" strokeDasharray="3 3" />
                 <text x={x(0.3)} y={y(0.3) + 3} textAnchor="middle" fontSize="9" fill="#cbd5e1">
                   {r.risk_id}
                 </text>
               </g>
             );
           }
-          const cx = x(r.p_mean), cy = y(r.i_mean);
-          const rad = radius(r.weight_total);
+          const cx = clampX(x(r.p_mean));
+          const cy = clampY(y(r.i_mean));
           const sel = selected === r.risk_id;
           return (
             <g
@@ -239,7 +244,7 @@ function PIMatrix({
               onClick={() => onSelect(r.risk_id)}
             >
               <circle
-                cx={cx} cy={cy} r={rad}
+                cx={cx} cy={cy} r={BUBBLE_R}
                 fill={RISK_COLORS[r.risk_id] + 'b3'}
                 stroke={sel ? '#ffffff' : RISK_COLORS[r.risk_id]}
                 strokeWidth={sel ? 3 : 1.5}
