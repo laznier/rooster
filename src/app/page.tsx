@@ -67,14 +67,6 @@ export default function HomePage() {
               </svg>
             </a>
             <a
-              href={links.linkedinPost}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center px-6 py-3 border border-navy-500 text-navy-200 text-sm font-semibold rounded-lg hover:bg-navy-800 hover:text-white transition-colors"
-            >
-              See Industry Response
-            </a>
-            <a
               href={links.linkedin}
               target="_blank"
               rel="noopener noreferrer"
@@ -675,57 +667,6 @@ export default function HomePage() {
             <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
             </svg>
-          </a>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════
-          SOCIAL PROOF / VALIDATION
-          ═══════════════════════════════════════════ */}
-      <section id="validation" className="section-padding bg-navy-50 scroll-mt-16">
-        <div className="container-narrow">
-          <p className="text-xs font-medium text-accent-600 uppercase tracking-[0.2em] mb-3">
-            Validation
-          </p>
-          <h2 className="text-3xl md:text-4xl font-bold text-navy-900 tracking-tight mb-4">
-            Industry Response
-          </h2>
-          <div className="h-0.5 w-12 bg-accent-500 rounded-full mb-8" />
-
-          <p className="text-base md:text-lg text-navy-700 leading-relaxed mb-8">
-            The concept and early prototype have been shared publicly on LinkedIn,
-            generating meaningful engagement from defense professionals, training
-            specialists, and technology leaders in the military simulation space.
-          </p>
-
-          <a
-            href={links.linkedinPost}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block border border-navy-200 rounded-xl overflow-hidden bg-white hover:shadow-md transition-shadow group"
-          >
-            <div className="p-6 md:p-8">
-              <div className="flex items-center gap-3 mb-4">
-                <svg className="w-6 h-6 text-[#0A66C2]" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                </svg>
-                <span className="text-sm font-medium text-navy-600">LinkedIn Post</span>
-              </div>
-              <p className="text-base text-navy-800 font-medium leading-relaxed mb-3">
-                &ldquo;There&apos;s a critical training gap between whiteboard
-                instruction and enterprise simulator time&hellip;&rdquo;
-              </p>
-              <p className="text-sm text-navy-500 leading-relaxed">
-                Read the full post and see the community response from defense and
-                training professionals.
-              </p>
-              <div className="mt-4 flex items-center text-sm font-medium text-accent-600 group-hover:text-accent-700 transition-colors">
-                View on LinkedIn
-                <svg className="ml-1 w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </div>
-            </div>
           </a>
         </div>
       </section>
